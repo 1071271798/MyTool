@@ -1,0 +1,12 @@
+*~
+.DS_Store
+desktop.ini
+*.cache
+*.svn
+
+Thumbs.db
+test-results/*
+Temp/*
+strange-csharp.userprefs
+strangeioc_unity/Temp
+strangeioc_unity/Library/metadata

@@ -22,10 +22,6 @@ public class SqliteAccess : DataBase
 
     #region 公有函数
 
-
-
-
-
     public SqliteAccess(string connectionString)
     {
         OpenDB(connectionString);
