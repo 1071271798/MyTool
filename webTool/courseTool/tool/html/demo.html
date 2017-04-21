@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Demo</title>
+<script>
+	function import1(){
+    var selectedFile = document.getElementById("files").files[0];//获取读取的File对象
+    var name = selectedFile.name;//读取选中文件的文件名
+    var size = selectedFile.size;//读取选中文件的大小
+    console.log("文件名:"+name+"大小："+size);
+	
+}
+</script>
+<script type="text/javascript" src="../js/Courses.js"></script>
+<script src="../js/Language.js"></script>
+</head>
+<body>
+<script>
+	var path = coursesRootPath;
+	var folderList = getFolder(path);
+	for (var i = 0, imax = folderList.length; i < imax; ++i) {
+		var course = new Courses(folderList[i].name, folderList[i].path);
+		course.read();
+		var flag = course.readConfig(currentLanguage);
+		if (flag) {
+			var config = course.configMap.get(currentLanguage);
+			if (null == config) {
+				console.log("无法取到配置信息 " + currentLanguage);
+			} else {
+				var courseId = config.getValue("courseId");
+				if (null == courseId) {
+					console.log("无法取到courseId");
+				} else {
+					alert(courseId + " 加载成功");
+					console.log(course.configMap.get(currentLanguage).text["courseId"]);
+				}
+			}
+			
+		} else {
+			alert("课程加载失败");
+		}
+	}	
+</script>
+<input type="file" id="files" value="选择文件夹" onchange="import1()"/>
+</body>
+</html>

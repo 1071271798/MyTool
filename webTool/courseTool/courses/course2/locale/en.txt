@@ -1,0 +1,157 @@
+{
+  "courseId": 1,
+  "courseName": "课程2",
+  "courseTitle": "让星宝眨眼三次并发出熊叫声",
+  "startStory": [
+    [
+      {
+        "img": "../../../courses/course2/images/p1.png",
+        "text": "接下来,为星宝安装性格程序",
+        "directioin": "left",
+        "position": 25
+      },
+      {
+        "img": "../../../courses/course2/images/r_xinbao@1x.png",
+        "text": "星宝你好",
+        "directioin": "right",
+        "position": 10
+      },
+      {
+        "img": "../../../courses/course2/images/r_xinbao@1x.png",
+        "text": "星宝你好2",
+        "directioin": "right",
+        "position": 48
+      },
+      {
+        "img": "../../../courses/course2/images/l_xinbao@1x.png",
+        "text": "接下来,为",
+        "directioin": "left",
+        "position": 64
+      }
+    ]
+  ],
+  "endStory": [
+    [
+      {
+        "img": "../../../courses/course2/images/xinbao@1x.png",
+        "text": "星宝你好",
+        "directioin": "left",
+        "position": 30
+      },
+      {
+        "img": "../../../courses/course2/images/p1.png",
+        "text": "哟呵，我回来了",
+        "directioin": "right",
+        "position": 10
+      }
+    ]
+  ],
+  "allStepPage": [
+    [
+      {
+        "key": "title",
+        "value": [
+          "步骤1"
+        ]
+      },
+      {
+        "key": "img",
+        "value": [
+          "../../../courses/course2/images/step1.png"
+        ]
+      },
+      {
+        "key": "text",
+        "value": [
+          "将三个程序块组合起来,表情在音效之上"
+        ]
+      }
+    ],
+    [
+      {
+        "key": "title",
+        "value": [
+          "步骤2"
+        ]
+      },
+      {
+        "key": "img",
+        "value": [
+          "../../../courses/course2/images/step2.png"
+        ]
+      },
+      {
+        "key": "text",
+        "value": [
+          "点击\"运行\"按钮后注意星宝的表情及声音"
+        ]
+      }
+    ],
+    [
+      {
+        "key": "title",
+        "value": [
+          "查看示例"
+        ]
+      },
+      {
+        "key": "img",
+        "value": [
+          "../../../courses/course2/images/eye_close.png"
+        ]
+      },
+      {
+        "key": "text",
+        "value": [
+          "实在不会编辑才可以查看哦"
+        ]
+      },
+      {
+        "key": "btn",
+        "value": [
+          "查看"
+        ]
+      }
+    ],
+    [
+      {
+        "key": "title",
+        "value": [
+          "查看示例"
+        ]
+      },
+      {
+        "key": "img",
+        "value": [
+          "../../../courses/course2/images/step3.png"
+        ]
+      },
+      {
+        "key": "text",
+        "value": [
+          "实在不会编辑才可以查看哦"
+        ]
+      },
+      {
+        "key": "btn",
+        "value": [
+          "隐藏"
+        ]
+      }
+    ]
+  ],
+  "videoSrc": "../../../courses/course2/video/course_two.mp4",
+  "isShowTrash": false,
+  "toolConfig": "<xml type=aaaaa>",
+  "toolConfigShow": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "initProgram": "<xml xmlns=\"http://www.w3.org/1999/xhtml\"><block type=\"program_start\" id=\"RBpqO=zS:Min@~s1YZVV\" deletable=\"false\" x=\"87\" y=\"38\"></block><block type=\"id_show_emoji\" id=\"c35k)mUSKTOhYZ_eCJPG\" x=\"107\" y=\"111\"><field name=\"Emotion\">{\"islightLock\":true,\"lightArray\":[{\"id\":1,\"emotionIndex\":0,\"color\":\"#2dc6ec\"},{\"id\":2,\"emotionIndex\":0,\"color\":\"#2dc6ec\"}]}</field><value name=\"value_input\"><shadow type=\"custom_math_num\" id=\"w:3Se8ZNr;3F-5%azQ2`\"><field name=\"NUM\">3</field></shadow></value></block><block type=\"id_show_play_effects\" id=\"qLpz4?vrrN+f*T(8~p0k\" x=\"177\" y=\"181\"><field name=\"Effect\">{\"type\":\"animal\", \"key\":\"bear\", \"description\":\"熊\"}</field></block></xml>",
+  "standardProgram": "<xml xmlns=\"http://www.w3.org/1999/xhtml\"><block type=\"program_start\" id=\"RBpqO=zS:Min@~s1YZVV\" deletable=\"false\" x=\"87\" y=\"38\"><next><block type=\"id_show_emoji\" id=\"c35k)mUSKTOhYZ_eCJPG\"><field name=\"Emotion\">{\"islightLock\":true,\"lightArray\":[{\"id\":1,\"emotionIndex\":0,\"color\":\"#2dc6ec\"},{\"id\":2,\"emotionIndex\":0,\"color\":\"#2dc6ec\"}]}</field><value name=\"value_input\"><shadow type=\"custom_math_num\" id=\"w:3Se8ZNr;3F-5%azQ2`\"><field name=\"NUM\">3</field></shadow></value><next><block type=\"id_show_play_effects\" id=\"qLpz4?vrrN+f*T(8~p0k\"><field name=\"Effect\">{\"type\":\"animal\", \"key\":\"bear\", \"description\":\"熊\"}</field></block></next></block></next></block></xml>"
+}
