@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+    
+    
+    <!-- Bootstrap core CSS     -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!--  Fonts and icons     -->
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!--   Core JS Files   -->
+    <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
+	<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <script src="js/Courses.js"></script>
+    <script src="js/Language.js"></script>
+    <script src="js/UrlParam.js"></script>
+    <script src="js/courseEditDom.js"></script>
+    <script src="js/cookieTool.js"></script>
+	<title>课程编辑</title>
+	<script>
+		var cookieTool = new CookieTool();
+		var storyPathName = "";
+		var coursePathName = "";
+		if (UrlParm.hasParm("story")){
+			storyPathName = UrlParm.parm("story");
+			console.log("select story = " + storyPathName);
+		}
+		if (UrlParm.hasParm("course")){
+			coursePathName = UrlParm.parm("course");
+			console.log("select course = " + coursePathName);
+		}
+		var lgType = cookieTool.getCookies("languageType")
+		if (null != lgType && undefined != lgType) {
+			currentLanguage = lgType;
+			console.log("select language = " + currentLanguage);
+		}
+		
+		/*if (UrlParm.hasParm("lg")) {
+			currentLanguage = UrlParm.parm("lg");
+			console.log("select language = " + currentLanguage);
+		}*/
+		var editCourse = new Courses(coursePathName, coursesRootPath + "/" + storyPathName + "/" + coursePathName);
+		console.log("selsect course path = " + editCourse.path);
+		
+		editCourse.read(currentLanguage);
+		var editConfig = null;
+		if (editCourse.readConfig(currentLanguage)) {
+			editConfig = editCourse.getConfig(currentLanguage);
+		} else {
+			var configFileName = currentLanguage + configEx;
+			editConfig = new ConfigFile(configFileName, editCourse.localePath + "/" + configFileName, currentLanguage);
+		}
+		
+		function addStartStory(index, storyContent) {
+			//添加选项卡标题
+			var titleDom = getTabbableTitle(index==0, "start-title-" + index, "start-panel-" + index, index);
+			//添加内容
+			var contentDom = getStoryContent(index==0, storyContent, index, "start", editCourse.images);
+			$("#tabs-start-title").append(titleDom);
+			$("#tabs-start-content").append(contentDom);
+			
+			$("#start-img-" + index).change(function (){
+				var selectImg = $("#start-img-" + index + " option:selected").val();
+				console.log("selectImg=" + selectImg);
+				editConfig.setStartStoryImg(index, selectImg);
+			});
+			$("#start-text-" + index).change(function () {
+				var startText = $("#start-text-" + index).val();
+				console.log("startText = " + startText);
+				editConfig.setStartStoryText(index, startText);
+			});
+			$("#start-dir-" + index).change(function () {
+				var selectDir = $("#start-dir-" + index + " option:selected").val();
+				console.log("selectDir = " + selectDir);
+				editConfig.setStartStoryDir(index, selectDir);
+			});
+			$("#start-pos-" + index).change(function () {
+				var startPos = $("#start-pos-" + index).val();
+				console.log("startPos = " + startPos);
+				editConfig.setStartStoryPos(index, startPos);
+			});
+		}
+		
+		function addEndStory(index, storyContent) {
+			//添加选项卡标题
+			var titleDom = getTabbableTitle(index==0, "end-title-" + index, "end-panel-" + index, index);
+			//添加内容
+			var contentDom = getStoryContent(index==0, storyContent, index, "end", editCourse.images);
+			$("#tabs-end-title").append(titleDom);
+			$("#tabs-end-content").append(contentDom);
+			
+			$("#end-img-" + index).change(function (){
+				var selectImg = $("#end-img-" + index + " option:selected").val();
+				console.log("selectImg=" + selectImg);
+				editConfig.setEndStoryImg(index, selectImg);
+			});
+			$("#end-text-" + index).change(function () {
+				var endText = $("#end-text-" + index).val();
+				console.log("endText = " + endText);
+				editConfig.setEndStoryText(index, endText);
+			});
+			$("#end-dir-" + index).change(function () {
+				var selectDir = $("#end-dir-" + index + " option:selected").val();
+				console.log("selectDir = " + selectDir);
+				editConfig.setEndStoryDir(index, selectDir);
+			});
+			$("#end-pos-" + index).change(function () {
+				var endPos = $("#end-pos-" + index).val();
+				console.log("endPos = " + endPos);
+				editConfig.setEndStoryPos(index, endPos);
+			});
+		}
+		
+		function addStepPage(index, stepPageData) {
+			//添加选项卡标题
+			var titleDom = getTabbableTitle(index==0, "stepPage-panel-title-" + index, "stepPage-panel-" + index, index);
+			//添加内容
+			var contentDom = getStepPageContent(index==0, stepPageData, index, editCourse.images);
+					
+			$("#tabs-stepPage-title").append(titleDom);
+			$("#tabs-stepPage-content").append(contentDom);
+			
+			$("#stepPage-title-" + index).change(function () {
+				editConfig.setStepPageTitle(index, $("#stepPage-title-" + index).val());
+			});
+			$("#stepPage-img-" + index).change(function (){
+				var selectImg = $("#stepPage-img-" + index + " option:selected").val();
+				editConfig.setStepPageImg(index, selectImg);
+			});
+			$("#stepPage-text-" + index).change(function () {
+				editConfig.setStepPageText(index, $("#stepPage-text-" + index).val());
+			});			
+			$("#stepPage-btn-" + index).change(function () {
+				editConfig.setStepPageBtn(index, $("#stepPage-btn-" + index).val());
+			});
+		}
+		
+		function setToolConfigShowEvent(index) {
+			$("#toolConfigShow" + index).change(function () {
+					editConfig.setToolConfigShow(index, $("#toolConfigShow" + index).prop("checked"));
+			});
+		}
+		
+		$(document).ready(function(){
+			//初始化界面
+			$("#courseId").val(editConfig.getCourseId());
+			$("#courseName").val(editConfig.getCourseName());
+			$("#courseTitle").val(editConfig.getCourseTitle());
+			var startStoryList = editConfig.getStartStory();
+			if (startStoryList != undefined && startStoryList != null) {
+				for (var i = 0; i < startStoryList.length; ++i) {
+					addStartStory(i, startStoryList[i]);
+				}
+			}
+			var endStoryList = editConfig.getEndStory();
+			if (endStoryList != undefined && endStoryList != null) {
+				for (var i = 0; i < endStoryList.length; ++i) {
+					addEndStory(i, endStoryList[i]);
+				}
+			}
+			//allStepPage
+			var stepPageList = editConfig.getStepPage();
+			if (stepPageList != undefined && stepPageList != null) {
+				for (var i = 0; i < stepPageList.length; ++i) {
+					addStepPage(i, stepPageList[i]);
+				}
+			}
+			//视频
+			var videoItem = editConfig.getVideoSrc();
+			var selectItem = "none";
+			for (var i = 0; i < editCourse.video.length; ++i) {
+				if (null != videoItem && undefined != videoItem && endWith(videoItem, editCourse.video[i].name)) {
+					selectItem = editCourse.video[i].name;
+				}
+			}
+			var videoDom = getFileSelect("form-control", "videoSrcSelect", editCourse.video, selectItem, true);
+			$("#videoSrcDiv").append(videoDom);
+			//显示垃圾桶
+			var isShowTrash = editConfig.getShowTrash();
+			if (isShowTrash) {
+				$("#showTrash_show").attr("checked", true);
+				$("#showTrash_hide").attr("checked", false);
+			} else {
+				$("#showTrash_show").attr("checked", false);
+				$("#showTrash_hide").attr("checked", true);
+			}
+			
+			//菜单显示
+			var menuState = editConfig.getToolConfigShow();
+			for (var i = 0; i < 7; ++i) {
+				var state = false;
+				if (null != menuState && undefined != menuState && undefined != menuState[i]) {
+					state = (menuState[i] == 1);
+				}
+				$("#toolConfigShow" + i).attr("checked", state);
+			}
+			
+			var toolConfig = editConfig.getToolConfig();
+			$("#toolConfigText").val(toolConfig);
+			var initProgram = editConfig.getInitProgram();
+			$("#initProgramText").val(initProgram);
+			var standardProgram = editConfig.getStandardProgram();
+			$("#standardProgramText").val(standardProgram);
+			
+			
+			//事件绑定
+			$("#courseId").change(function (){
+				editConfig.setCourseId($("#courseId").val());
+				cookieTool.setCookies("courseId", $("#courseId").val());
+			});
+			$("#courseName").change(function (){
+				editConfig.setCourseName($("#courseName").val());
+				cookieTool.setCookies("courseName", $("#courseName").val());
+			});
+			$("#courseTitle").change(function (){
+				editConfig.setCourseTitle($("#courseTitle").val());
+				cookieTool.setCookies("courseTitle", $("#courseTitle").val());
+			});
+			//添加startStory
+			$("#startStoryAdd").click(function () {
+				var index = 0;
+				if (startStoryList != undefined) {
+					index = startStoryList.length;
+				}
+				addStartStory(index, null);
+				editConfig.addStartStory();
+				for (var i = 0; i < index; ++i) {
+					$("#start-title-" + i).removeClass("active");
+					$("#start-panel-" + i).removeClass("active");
+				}
+				$("#start-title-" + index).addClass("active");
+				$("#start-panel-" + index).addClass("active");
+			});
+			//添加endStory
+			$("#endStoryAdd").click(function () {
+				var index = 0;
+				if (endStoryList != undefined) {
+					index = endStoryList.length;
+				}
+				addEndStory(index, null);
+				editConfig.addEndStory();
+				for (var i = 0; i < index; ++i) {
+					$("#end-title-" + i).removeClass("active");
+					$("#end-panel-" + i).removeClass("active");
+				}
+				$("#end-title-" + index).addClass("active");
+				$("#end-panel-" + index).addClass("active");
+			});
+			//添加allStepPage
+			$("#allStepPageAdd").click(function (){
+				var index = 0;
+				if (stepPageList != undefined) {
+					index = stepPageList.length;
+				}
+				addStepPage(index, null);
+				editConfig.addStepPage();					
+				for (var i = 0; i < index; ++i) {
+					$("#stepPage-title-" + i).removeClass("active");
+					$("#stepPage-panel-" + i).removeClass("active");
+				}
+				$("#stepPage-title-" + index).addClass("active");
+				$("#stepPage-panel-" + index).addClass("active");
+			});
+			//视屏
+			$("#videoSrcSelect").change(function (){
+				editConfig.setVideoSrc($("#videoSrcSelect" + " option:selected").val());
+			});
+			//是否显示垃圾箱
+			$("#isShowTrash").change(function () {
+				editConfig.setShowTrash($("#isShowTrash input:checked").val() == "true");
+			});
+			//菜单显示
+			for (var i = 0; i < 7; ++i) {
+				setToolConfigShowEvent(i);		
+			}
+			
+			var chooseTool = document.querySelector("#toolConfig");
+        	chooseTool.addEventListener("change", function (evt) {
+            	var fileText = readFileTextSync(this.value);
+            	$("#toolConfigText").val(fileText);
+            	editConfig.setToolConfig(fileText);
+        	}, false);
+        	$("#toolConfigText").change(function () {
+        		editConfig.setToolConfig($("#toolConfigText").val());
+        	});
+        	
+        	var chooseInit = document.querySelector('#initProgram');
+        	chooseInit.addEventListener("change", function (evt) {
+            	var fileText = readFileTextSync(this.value);
+            	$("#initProgramText").val(fileText);
+            	editConfig.setInitProgram(fileText);
+        	}, false);
+        	$("#initProgramText").change(function () {
+        		editConfig.setInitProgram($("#initProgramText").val());
+        	});
+        	
+        	var choosestand = document.querySelector('#standardProgram');
+        	choosestand.addEventListener("change", function (evt) {
+            	var fileText = readFileTextSync(this.value);
+            	$("#standardProgramText").val(fileText);
+            	editConfig.setStandardProgram(fileText);
+        	}, false);
+        	$("#standardProgramText").change(function () {
+        		editConfig.setStandardProgram($("#standardProgramText").val());
+        	});
+        	//保存
+        	$("#saveBtn").click(function (){
+        		if (editConfig.save(true)) {
+        			console.log("刷新页面");
+					location.reload(true);
+        		}
+        	});
+        	var exportBtn = document.querySelector('#export');
+        	exportBtn.addEventListener("change", function (evt) {
+            	var fileText = readFileTextSync(this.value);
+            	if (undefined != fileText && fileText != null && fileText != "") {
+            		var languageTool = new LanguageTool(currentLanguage, fileText);
+            		if (languageTool.loadFlag) {
+            			var lgArray = [];//languageType
+            			var index = 0;
+            			for (var i = 0; i < languageType.length; ++i) {
+            				if (languageType[i] != currentLanguage) {
+            					lgArray[index] = languageType[i];
+            					++index;
+            				}
+            			}
+            			editConfig.saveOther(lgArray, languageTool.lgText);
+            			alert("生成成功");
+            		}
+            	} else {
+            		alert("未读取到翻译文件");
+            	}
+        	}, false);
+		});
+	</script>
+</head>
+<body>
+	
+<div class="form-group">
+	<ul class="breadcrumb">
+		<li>
+			<a href="courseMenu.html">故事列表</a>
+		</li>
+		<li class="active">
+			<script>
+				document.write(coursePathName);
+			</script>
+		</li>
+	</ul>
+</div>
+
+<form id="form-main" class="form-horizontal" role="form">
+	<div class="form-group">
+		<label for="courseId" class="col-sm-2 control-label">课程ID</label>
+    	<div class="col-sm-10">
+      		<input type="number" class="form-control" id="courseId" placeholder="请输入整数" pattern="[0-9]+" title="请输入整数">
+    	</div>
+	</div>
+	<div class="form-group">
+		<label for="courseName" class="col-sm-2 control-label">课程名字</label>
+    	<div class="col-sm-10">
+      		<input type="text" class="form-control" id="courseName" placeholder="请输入课程名字">
+    	</div>
+	</div>
+	<div class="form-group">
+		<label for="courseTitle" class="col-sm-2 control-label">课程标题</label>
+    	<div class="col-sm-10">
+      		<input type="text" class="form-control" id="courseTitle" placeholder="请输入课程标题">
+    	</div>
+	</div>
+	<div class="panel-group" id="accordion">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+            	<h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#startStory">
+                	故事开始
+                </a>
+            	</h4>
+            	<br />
+            	<a id="startStoryAdd">添加</a>
+        	</div>
+        	<div id="startStory" class="panel-collapse collapse in">
+            	<!--选项卡-->
+            	<div class="tabbable" id="tabs-startStory">
+					<ul class="nav nav-tabs" id="tabs-start-title">
+					</ul>
+					<div class="tab-content" id="tabs-start-content">
+					</div>
+				</div>
+        	</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+            	<h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#endStory">
+                	故事结束
+                </a>
+            	</h4>
+            	<br />
+            	<a id="endStoryAdd">添加</a>
+        	</div>
+        	<div id="endStory" class="panel-collapse collapse in">
+            	<!--选项卡-->
+            	<div class="tabbable" id="tabs-endStory">
+					<ul class="nav nav-tabs" id="tabs-end-title">
+					</ul>
+					<div class="tab-content" id="tabs-end-content">
+					</div>
+				</div>
+        	</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+            	<h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#allStepPage">
+                	allStepPage
+                </a>
+            	</h4>
+            	<br />
+            	<a id="allStepPageAdd">添加</a>
+        	</div>
+        	<div id="allStepPage" class="panel-collapse collapse in">
+            	<!--选项卡-->
+            	<div class="tabbable" id="tabs-allStepPage">
+					<ul class="nav nav-tabs" id="tabs-stepPage-title">
+					</ul>
+					<div class="tab-content" id="tabs-stepPage-content">
+					</div>
+				</div>
+        	</div>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="videoSrcSelect" class="col-sm-2 control-label">视频</label>
+		<div class="col-sm-10" id="videoSrcDiv">
+    	</div>
+	</div>
+	<div class="form-group">
+		<label for="isShowTrash" class="col-sm-2 control-label">是否显示垃圾箱</label>
+    	<div class="col-sm-10" id="isShowTrash">
+    		<label class="checkbox-inline">
+    			<input type="radio" name="optionsRadiosinline" id="showTrash_show" value="true">显示
+  			</label>
+  			<label class="checkbox-inline">
+    			<input type="radio" name="optionsRadiosinline" id="showTrash_hide" value="false">隐藏
+  			</label>
+      	</div>
+  	</div>
+  	<div class="form-group">
+  		<label for="name" class="col-sm-2 control-label">逻辑编程菜单显示</label>
+		<div id="toolConfigShow" class="col-sm-10">
+  				<label class="checkbox-inline">
+    				<input type="checkbox" id="toolConfigShow0" value="0">开始
+  				</label>
+  				<label class="checkbox-inline">
+    				<input type="checkbox" id="toolConfigShow1" value="1">运动
+  				</label>
+  				<label class="checkbox-inline">
+    				<input type="checkbox" id="toolConfigShow2" value="2">控制
+  				</label>
+  				<label class="checkbox-inline">
+    				<input type="checkbox" id="toolConfigShow3" value="3">事件
+  				</label>
+  				<label class="checkbox-inline">
+    				<input type="checkbox" id="toolConfigShow4" value="4">展示
+  				</label>
+  				<label class="checkbox-inline">
+    				<input type="checkbox" id="toolConfigShow5" value="5">感知
+  				</label>
+  				<label class="checkbox-inline">
+    				<input type="checkbox" id="toolConfigShow6" value="6">数学
+  				</label>			
+		</div>
+  	</div>
+  	<div class="form-group">
+    	<label for="toolConfig" class="col-sm-2 control-label">模块显示文件</label>    	
+    	<div class="col-sm-10">
+    		<input type="file" class="form-control" id="toolConfig">
+    		<br />
+    		<textarea class="form-control" id="toolConfigText"></textarea>
+    		<p class="help-block">根据何凯那边的规则，配置需要显示的模块</p>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<label for="initProgram" class="col-sm-2 control-label">初始案例文件</label>
+    	<div class="col-sm-10">
+    		<input type="file" class="form-control" id="initProgram">
+    		<br />
+    		<textarea class="form-control" id="initProgramText"></textarea>
+    		<p class="help-block">打开逻辑编程显示的案例</p>
+    	</div>
+  	</div>
+  	<div class="form-group">
+    	<label for="standardProgram" class="col-sm-2 control-label">标准案例文件</label>
+    	<div class="col-sm-10">
+    		<input type="file" class="form-control" id="standardProgram">
+    		<br />
+    		<textarea class="form-control" id="standardProgramText"></textarea>
+    		<p class="help-block">用来与用户编写的程序匹配的标准案例</p>
+    	</div>
+  	</div>
+  	<div  class="form-group">
+  		<label for="saveBtn" class="col-sm-2 control-label">保存配置文件</label>
+  		<div class="col-sm-10">
+  			<button type="button" class="btn btn-success" id="saveBtn">保存</button>
+  			<p class="help-block">根据语言简写保存在locale目录下</p>
+  		</div>
+  	</div>
+  	<div  class="form-group">
+  		<label for="export" class="col-sm-2 control-label">生成多语言配置文件</label>
+  		<div class="col-sm-10">
+  			<input type="file" class="form-control" id="export">
+  			<p class="help-block">选择多语言txt文件，生成其他语言配置文件(以当前语言为key值查找翻译)</p>
+  		</div>
+  		
+  		
+  	</div>
+</form>
+</body>
+</html>
