@@ -112,7 +112,7 @@ function getStepPageContent(activeFlag, stepContent, index, imgs) {
 	
 	//文字
 	dom += "<div class='form-group'>\n";
-	dom += getLabel("stepPage-text-"+index, "col-sm-2 control-label", "文字");
+	dom += getLabel("stepPage-text-" + index, "col-sm-2 control-label", "文字");
 	dom += "<div class='col-sm-10'>";
 	var textValue = "";
 	if (null != stepContent) {
@@ -122,6 +122,7 @@ function getStepPageContent(activeFlag, stepContent, index, imgs) {
 		}
 	}
 	dom += getInputOfText("form-control", "stepPage-text-"+index, "请输入描述文字", textValue);
+	dom += "<p class='help-block'>若需要配置多条文字，请以|分开，例子：文字|文字|文字</p>";
 	dom += "</div>\n</div>\n";
 	
 	//按钮
@@ -137,7 +138,7 @@ function getStepPageContent(activeFlag, stepContent, index, imgs) {
 		}
 	}
 	dom += getInputOfText("form-control", "stepPage-btn-"+index, "请输入按钮上的文字", btnValue);
-	dom += "<p class='help-block'>如果没有按钮不需要填写该字段</p>";
+	dom += "<p class='help-block'>如果没有按钮不需要填写该字段，若需要配置多个按钮，请以|分开，例子：按钮|按钮|按钮</p>";
 	dom += "</div>\n</div>\n";
 	
 	dom += "</div>\n";

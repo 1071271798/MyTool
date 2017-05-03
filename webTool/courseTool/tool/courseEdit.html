@@ -41,7 +41,11 @@
 			currentLanguage = lgType;
 			console.log("select language = " + currentLanguage);
 		}
-		
+		var tmpPath = cookieTool.getCookies("rootPath");
+		if (null != tmpPath) {
+			rootPath = tmpPath;
+			coursesRootPath = rootPath + "/" + coursesRootDirName;
+		}
 		/*if (UrlParm.hasParm("lg")) {
 			currentLanguage = UrlParm.parm("lg");
 			console.log("select language = " + currentLanguage);

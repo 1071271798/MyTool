@@ -1,14 +1,23 @@
 var fs = require("fs");
 //当前exe所处路径
-var rootPath = require("path").dirname(process.execPath);
+var rootPath = require("path").dirname(require("path").dirname(process.execPath));
+console.log("rootPath = " + rootPath);
 //课程目录文件夹名
 var coursesRootDirName = "courses";
 //课程根目录
 var coursesRootPath = rootPath + "/" + coursesRootDirName;
 //配置文件后缀名
 var configEx = ".txt";
+
+function isCoursesExists() {
+	if (fs.existsSync(coursesRootPath)) {
+		return true;
+	}
+	return false;
+}
 //获取目录下的所有文件，包括子文件夹里面的文件
 function getAllFiles(path) {
+	
  	var filesList = [];
  	readFiles(path,filesList);
  	return filesList;
@@ -22,7 +31,7 @@ function getFiles(path) {
  			files.forEach(walk);
  			function walk(file) { 
   				states = fs.statSync(path+'/'+file);   
-  				if(!states.isDirectory()) {
+  				if(!states.isDirectory() && file != ".DS_Store" && path.indexOf(".svn") < 0 && path.indexOf(".git") < 0) {
    					//创建一个对象保存信息
    					var obj = new Object();
    					obj.size = states.size;//文件大小，以字节为单位
@@ -33,7 +42,7 @@ function getFiles(path) {
   				}
  			}
 		} else {
-			console("非法路径：" + path);
+			console.log("非法路径：" + path);
 		}
 	}catch(e){
 		//TODO handle the exception
@@ -49,7 +58,7 @@ function getFolder(path) {
 		files.forEach(walk);
 		function walk(file) {
 			states = fs.statSync(path + "/" + file);
-			if (states.isDirectory()){
+			if (states.isDirectory() && file != ".svn" && file != ".git"){
 				var obj = new Object();
 				obj.name = file;
 				obj.path = path + "/" + file;
@@ -57,7 +66,7 @@ function getFolder(path) {
 			}
 		}
 	} else {
-		alert("非法路径：" + path);
+		console.log("非法路径：" + path);
 	}
 	return folderList;
 }
@@ -141,8 +150,10 @@ function readFiles(path,filesList) {
  		function walk(file) { 
   			states = fs.statSync(path+'/'+file);   
   			if(states.isDirectory()) {
-   				readFiles(path+'/'+file,filesList);
-  			} else { 
+  				if (file != ".svn" && file != ".git") {
+  					readFiles(path+'/'+file,filesList);
+  				}
+  			} else if (file != ".DS_Store" && path.indexOf(".svn") < 0 && path.indexOf(".git") < 0){ 
    				//创建一个对象保存信息
    				var obj = new Object();
    				obj.size = states.size;//文件大小，以字节为单位
@@ -430,11 +441,17 @@ ConfigFile.prototype.setStepPageText = function (index, textValue) {
 	if (textValue == "") {
 		this.delStepPageData(index, dataIndex);
 	} else {
+		var textArray = [];
+		if (textValue.indexOf("|") >= 0) {
+			textArray = textValue.split("|");
+		} else {
+			textArray[0] = textValue;
+		}
 		if (-1 == dataIndex) {
 			var length = this.text[allStepPage][index].length;
-			this.text[allStepPage][index][length] = {"key":text,"value":[textValue]};
+			this.text[allStepPage][index][length] = {"key":text,"value":textArray};
 		} else {
-			this.text[allStepPage][index][dataIndex]["value"][0] = textValue;
+			this.text[allStepPage][index][dataIndex]["value"] = textArray;
 		}
 	}
 }
@@ -458,11 +475,17 @@ ConfigFile.prototype.setStepPageBtn = function (index, btnValue) {
 	if (btnValue == "") {
 		this.delStepPageData(index, dataIndex);
 	} else {
+		var btnArray = [];
+		if (btnValue.indexOf("|") >= 0) {
+			btnArray = btnValue.split("|");
+		} else {
+			btnArray[0] = btnValue;
+		}
 		if (-1 == dataIndex) {
 			var length = this.text[allStepPage][index].length;
-			this.text[allStepPage][index][length] = {"key":btn,"value":[btnValue]};
+			this.text[allStepPage][index][length] = {"key":btn,"value":btnArray};
 		} else {
-			this.text[allStepPage][index][dataIndex]["value"][0] = btnValue;
+			this.text[allStepPage][index][dataIndex]["value"] = btnArray;
 		}
 	}
 }
@@ -575,7 +598,9 @@ ConfigFile.prototype.saveOther = function (lgArray, lgText) {
 					}
 					
 				} else {
-					otherConfig.text[allStepPage][stepIndex][dataIndex]["value"][0] = getText(this.text[allStepPage][stepIndex][dataIndex]["value"][0], lgArray[i], lgText, errerInfo);
+					for (var valueIndex = 0; valueIndex < this.text[allStepPage][stepIndex][dataIndex]["value"].length; ++valueIndex) {
+						otherConfig.text[allStepPage][stepIndex][dataIndex]["value"][valueIndex] = getText(this.text[allStepPage][stepIndex][dataIndex]["value"][valueIndex], lgArray[i], lgText, errerInfo);
+					}
 				}
 			}
 		}

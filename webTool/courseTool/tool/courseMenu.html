@@ -37,6 +37,28 @@
 			width: 50%;
 		}
 	</style>
+	<script>
+		$(document).ready(function(){
+			var selectCourse = document.querySelector("#selectCourse");
+        	selectCourse.addEventListener("change", function (evt) {
+        		var path = this.value;
+        		console.log("path=" + path);
+        		var index = path.indexOf("getPath.txt");
+        		if (index >= 0) {
+        			var courseRootPath = path.substring(0, index - 2 - coursesRootDirName.length);
+        			rootPath = courseRootPath;
+        			coursesRootPath = rootPath + "/" + coursesRootDirName;
+        			console.log(rootPath);
+        			console.log(coursesRootPath);
+        			var ck = new CookieTool();
+        			ck.setCookies("rootPath", rootPath);
+        			location.reload(true);
+        		} else {
+        			console.log("未找到文件夹");
+        		}
+        	}, false);
+		});
+	</script>
 </head>
 <body>
 <div class="main-panel">
@@ -83,6 +105,12 @@
 			<ul class="nav nav-tabs">
 				<!-- 生成故事标签 -->
 				<script>
+				var ck = new CookieTool();
+				var tmpPath = ck.getCookies("rootPath");
+				if (null != tmpPath) {
+					rootPath = tmpPath;
+					coursesRootPath = rootPath + "/" + coursesRootDirName;
+				}
 				var storyList = getFolder(coursesRootPath);
 				//var storyList = [{"name":"story1"}];
 				//生成故事标签
@@ -99,25 +127,32 @@
 			<div class="tab-content">
 				<!-- 生成课程列表 -->
 				<script>
-					var storyList = getFolder(coursesRootPath);
-					//var storyList = [{"name":"story1"}];
-					for (var storyIndex = 0; storyIndex < storyList.length; ++storyIndex) {
-						if (storyIndex == 0 ) {
-							document.write("<div class='tab-pane active' id='" + storyList[storyIndex].name + "'>\n");
-						} else {
-							document.write("<div class='tab-pane' id='" + storyList[storyIndex].name + "'>\n")
+					if (isCoursesExists()) {
+						var storyList = getFolder(coursesRootPath);
+						//var storyList = [{"name":"story1"}];
+						for (var storyIndex = 0; storyIndex < storyList.length; ++storyIndex) {
+							if (storyIndex == 0) {
+								document.write("<div class='tab-pane active' id='" + storyList[storyIndex].name + "'>\n");
+							} else {
+								document.write("<div class='tab-pane' id='" + storyList[storyIndex].name + "'>\n")
+							}
+							document.write("<div class='table-responsive'>\n<table class='table'>\n<tbody>\n");
+							var folderList = getFolder(storyList[storyIndex].path);
+							//var folderList = [{"name":"course1"}, {"name":"course2"}];
+							for (var i = 0, imax = folderList.length; i < imax; ++i) {					
+								console.log("currentLanguage=" + currentLanguage);
+								document.write("<tr>\n<td>\n");
+								document.write("<a class='navbar-brand' href='courseEdit.html?story=" + storyList[storyIndex].name + "&course=" + folderList[i].name +"'>" + folderList[i].name + "</a>\n");
+								document.write("</td>\n<td>\n");
+								document.write("<a class='navbar-brand' href='courseEdit.html?story=" + storyList[storyIndex].name + "&course=" + folderList[i].name +"'>点击进入课程编辑</a>\n</td>\n</tr>");
+							}
+							document.write("</tbody>\n</table>\n</div>\n</div>\n");
 						}
-						document.write("<div class='table-responsive'>\n<table class='table'>\n<tbody>\n");
-						var folderList = getFolder(storyList[storyIndex].path);
-						//var folderList = [{"name":"course1"}, {"name":"course2"}];
-						for (var i = 0, imax = folderList.length; i < imax; ++i) {					
-							console.log("currentLanguage=" + currentLanguage);
-							document.write("<tr>\n<td>\n");
-							document.write("<a class='navbar-brand' href='courseEdit.html?story=" + storyList[storyIndex].name + "&course=" + folderList[i].name +"'>" + folderList[i].name + "</a>\n");
-							document.write("</td>\n<td>\n");
-							document.write("<a class='navbar-brand' href='courseEdit.html?story=" + storyList[storyIndex].name + "&course=" + folderList[i].name +"'>点击进入课程编辑</a>\n</td>\n</tr>");
-						}
-						document.write("</tbody>\n</table>\n</div>\n</div>\n");
+					} else {
+						document.write("<div  class='form-group'>\n");
+						document.write("<label for='selectCourse' class='col-sm-2 control-label'>请选择课程路径</label>\n");
+						document.write("<div class='col-sm-10'>");
+						document.write("<input type='file' class='form-control' id='selectCourse'>\n</div>\n</div>");
 					}
 				</script>
 			</div>

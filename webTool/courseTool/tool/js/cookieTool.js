@@ -2,7 +2,7 @@ function CookieTool(){
 	this.setCookies = setCookies;
 	function setCookies(ckname, ckvalue){
 		var time = new Date();
-		time.setTime(time.getTime() + 30*24*60*60*1000);
+		time.setTime(time.getTime() + 10000*24*60*60*1000);
 		var con = escape(ckname) + "=" + escape(ckvalue) + ";expires=" + time.toGMTString();
 		console.log(con);
 		document.cookie = con;
