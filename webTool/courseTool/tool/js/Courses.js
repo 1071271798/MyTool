@@ -1,6 +1,7 @@
 var fs = require("fs");
+var rePath = require("path");
 //当前exe所处路径
-var rootPath = require("path").dirname(require("path").dirname(process.execPath));
+var rootPath = rePath.dirname(rePath.dirname(process.execPath));
 console.log("rootPath = " + rootPath);
 //课程目录文件夹名
 var coursesRootDirName = "courses";
@@ -14,6 +15,10 @@ function isCoursesExists() {
 		return true;
 	}
 	return false;
+}
+
+function getDirName(path) {
+	return rePath.dirname(path);
 }
 //获取目录下的所有文件，包括子文件夹里面的文件
 function getAllFiles(path) {

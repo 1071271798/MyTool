@@ -83,6 +83,22 @@ LanguageTool.prototype.getText = function(key, lgType) {
 	return undefined;
 }
 
+LanguageTool.prototype.getLanguageJson = function() {
+	if (this.loadFlag) {
+		var language = {};
+		for (var textKey in this.lgText) {
+			for (var lgKey in this.lgText[textKey]) {
+				if (!language.hasOwnProperty(lgKey)) {
+					language[lgKey] = {};
+				}
+				language[lgKey][textKey] = this.lgText[textKey][lgKey];
+			}
+		}
+		return language;
+	}
+	return undefined;
+}
+
 function trimStart(str, trimStr){
     if(!trimStr){return str;}
     var temp = str;
