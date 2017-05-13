@@ -1,0 +1,8 @@
+test-call.bat
+test-errorlevel.bat
+test-for.bat
+test-glacier.bat
+test-if-exist.bat
+test-net.bat
+test-param.bat
+test-str.bat
