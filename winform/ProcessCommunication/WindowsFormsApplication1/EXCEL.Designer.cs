@@ -1,6 +1,6 @@
 ﻿namespace WindowsFormsApplication1
 {
-    partial class Form1
+    partial class EXCEL
     {
         /// <summary>
         /// 必需的设计器变量。
@@ -33,6 +33,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
+            this.normalCopyBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -81,18 +82,29 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.BtnOnClick);
             // 
-            // Form1
+            // normalCopyBtn
+            // 
+            this.normalCopyBtn.Location = new System.Drawing.Point(258, 131);
+            this.normalCopyBtn.Name = "normalCopyBtn";
+            this.normalCopyBtn.Size = new System.Drawing.Size(75, 23);
+            this.normalCopyBtn.TabIndex = 5;
+            this.normalCopyBtn.Text = "普通复制";
+            this.normalCopyBtn.UseVisualStyleBackColor = true;
+            this.normalCopyBtn.Click += new System.EventHandler(this.BtnOnClick);
+            // 
+            // EXCEL
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(586, 262);
+            this.Controls.Add(this.normalCopyBtn);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
-            this.Name = "Form1";
-            this.Text = "MyTool";
+            this.Name = "EXCEL";
+            this.Text = "EXCEL";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -106,6 +118,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button normalCopyBtn;
     }
 }
 

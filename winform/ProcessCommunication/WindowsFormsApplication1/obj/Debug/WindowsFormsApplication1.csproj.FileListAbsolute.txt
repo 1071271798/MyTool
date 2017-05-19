@@ -46,6 +46,12 @@ E:\MyTool_20160317\ProcessCommunication\WindowsFormsApplication1\obj\Debug\Proce
 E:\MyTool_20160317\ProcessCommunication\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
 E:\MyTool_20160317\ProcessCommunication\WindowsFormsApplication1\obj\Debug\ProcessCommunication.exe
 E:\MyTool_20160317\ProcessCommunication\WindowsFormsApplication1\obj\Debug\ProcessCommunication.pdb
-E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\bin\Debug\ProcessCommunication.exe.config
-E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\obj\Debug\ProcessCommunication.exe
-E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\obj\Debug\ProcessCommunication.pdb
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\bin\Debug\EXCEL.exe.config
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\bin\Debug\EXCEL.exe
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\bin\Debug\EXCEL.pdb
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.EXCEL.resources
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\obj\Debug\EXCEL.Properties.Resources.resources
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\obj\Debug\EXCEL.exe
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\obj\Debug\EXCEL.pdb

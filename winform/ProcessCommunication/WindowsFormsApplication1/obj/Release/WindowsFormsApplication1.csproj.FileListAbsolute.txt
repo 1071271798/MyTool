@@ -29,3 +29,12 @@ E:\MyTool_20160317\ProcessCommunication\WindowsFormsApplication1\bin\Release\MyT
 E:\MyTool_20160317\ProcessCommunication\WindowsFormsApplication1\obj\Release\MyTool.exe
 E:\MyTool_20160317\ProcessCommunication\WindowsFormsApplication1\obj\Release\MyTool.pdb
 E:\MyTool_20160317\ProcessCommunication\WindowsFormsApplication1\bin\Release\ProcessCommunication.exe.config
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.EXCEL.resources
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\obj\Release\WindowsFormsApplication1.csproj.GenerateResource.Cache
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\bin\Release\EXCEL.exe.config
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\bin\Release\EXCEL.exe
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\bin\Release\EXCEL.pdb
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\obj\Release\EXCEL.Properties.Resources.resources
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\obj\Release\EXCEL.exe
+E:\MyTool\winform\ProcessCommunication\WindowsFormsApplication1\obj\Release\EXCEL.pdb

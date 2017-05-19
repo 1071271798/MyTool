@@ -14,13 +14,13 @@ using System.Runtime.Serialization;
 
 namespace WindowsFormsApplication1
 {
-    public partial class Form1 : Form
+    public partial class EXCEL : Form
     {
         IntPtr h;
         int mOnceLenght = 30000000;
         string mCopyFilePath;
         int mCopyFileOffset;
-        public Form1()
+        public EXCEL()
         {
             InitializeComponent();
             //h = this.Handle;
@@ -89,6 +89,33 @@ namespace WindowsFormsApplication1
                     catch (System.Exception ex)
                     {
                         MessageBox.Show(ex.Message);
+                    }
+                }
+            }
+            else if (sender == this.normalCopyBtn)
+            {//普通复制
+                if (!string.IsNullOrEmpty(this.textBox1.Text))
+                {
+                    FolderBrowserDialog dialog = new FolderBrowserDialog();
+                    dialog.Description = "请选择保存路径";
+                    if (dialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string foldPath = dialog.SelectedPath;
+                        if (!string.IsNullOrEmpty(foldPath))
+                        {
+                            if (File.Exists(this.textBox1.Text))
+                            {//选中了文件
+                                string fileName = Path.GetFileName(this.textBox1.Text);
+                                string newPath = Path.Combine(foldPath, fileName);
+                                byte[] bytes = File.ReadAllBytes(this.textBox1.Text);
+                                if (null != bytes)
+                                {
+                                    File.WriteAllBytes(newPath, bytes);
+                                    MessageBox.Show("复制成功");
+                                }
+                                
+                            }
+                        }
                     }
                 }
             }
