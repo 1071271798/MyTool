@@ -30,7 +30,7 @@
         		if (index >= 0) {
         			var fileText = readFileTextSync(this.value);
             		if (undefined != fileText && fileText != null && fileText != "") {
-            		var languageTool = new LanguageTool("key", fileText);
+            		var languageTool = new LanguageTool("关键字", fileText);
             		if (languageTool.loadFlag) {
             			var language = languageTool.getLanguageJson();
             			var saveText = "var language =" + JSON.stringify(language, null, 2);

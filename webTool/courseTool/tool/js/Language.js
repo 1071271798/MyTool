@@ -1,5 +1,5 @@
-var languageType = ["zh-hans", "en", "zh-hant", "fr", "de", "it", "es", "ja", "pt", "ar", "ko", "ru", "pl"];
-var languageType_CN = ["简体中文", "英文", "繁体中文", "法语", "德语", "意大利语", "西班牙语", "日语", "葡萄牙", "阿拉伯语", "韩语", "俄语", "波兰"];
+var languageType = ["zh-hans", "en", "zh-hant", "fr", "de", "it", "es", "ja", "pt", "ar", "ko", "ru", "pl", "tr", "da", "th"];
+var languageType_CN = ["简体中文", "英文", "繁体中文", "法语", "德语", "意大利语", "西班牙语", "日语", "葡萄牙", "阿拉伯语", "韩语", "俄语", "波兰", "土耳其", "丹麦", "泰语"];
 var currentLanguage = "zh-hans";
 
 
@@ -27,9 +27,10 @@ LanguageTool.prototype.initText = function(fileText) {
 		if (textArray[0].indexOf("\t") < 0) {
 			alert("未检测到分隔符，请导出文件的时候选择制表符分隔");
 		} else if (null != lgTypeArray){
+			console.log("lgTypeArray = " + lgTypeArray);
 			var readLgType = trim(textArray[0], "\n").split("\t");
 			if (null != readLgType) {
-				console.log(readLgType);
+				console.log("readLgType =" + readLgType);
 			}
 			var lgTypeArrayNew = [];
 			for (var i = 0; i < readLgType.length; ++i) {
@@ -45,9 +46,22 @@ LanguageTool.prototype.initText = function(fileText) {
 					lgTypeArrayNew[i] = readLgType[i];
 				}
 			}
+			
 			var keyIndex = lgTypeArrayNew.indexOf(this.lgKey);
+			for (var i = 0; i < lgTypeArrayNew.length; ++i) {
+				console.log("lgTypeArrayNew " + i + " =" + lgTypeArrayNew[i]);
+				if (this.lgKey == lgTypeArrayNew[i]) {
+					console.log("key index = " + i);
+					break;
+				}
+				if (lgTypeArrayNew[i] == "key") {
+					console.log("key1 index = " + i);
+					break;
+				}
+			}
 			if (-1 == keyIndex || keyIndex == undefined) {
 				alert("未在翻译文件中找到所选语言，请选择正确的翻译文件");
+				console.log("lgTypeArrayNew = " + lgTypeArrayNew + " lgKey=" + this.lgKey);
 				return;
 			}
 			for (var i = 1; i < textArray.length; ++i) {
