@@ -1,0 +1,13 @@
+.DS_Store
+.svn
+*.booproj
+*.csproj
+*.unityproj
+*.sln
+*.userprefs
+Temp
+obj
+Library
+.vs
+*.suo
+RobotUnity3D-csharp.VC.db

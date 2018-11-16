@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig>
+<Tracking>
+<ModelTarget name="unicore"/>
+</Tracking>
+
+<Assembly name="unicores_assembly">
+<Part name="unicore" translation="0 0 0" rotation="AD: 0 0 1 0"/>
+<EntryPoint name="viewpoint_0000" translation="0.153698 -0.224127 3.90208" rotation="AD: 1 8.26921806644182e-18 -2.410257267128852e-18 212.5">
+
+</EntryPoint>
+
+</Assembly>
+</QCARConfig>
