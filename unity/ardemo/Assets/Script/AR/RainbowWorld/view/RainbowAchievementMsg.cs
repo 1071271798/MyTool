@@ -3,30 +3,22 @@ using UnityEngine;
 /// <summary>
 /// 显示游戏中获得的成就
 /// </summary>
-public class ShowGameAchievementMsg : BasePopWin
+public class RainbowAchievementMsg : BasePopWin
 {
-    EventDelegate.Callback OnCloseCallback;
-    static ShowGameAchievementMsg sInst;
+    EventDelegate.Callback mCloseCallback;
 
-    public ShowGameAchievementMsg(EventDelegate.Callback callback)
+    public RainbowAchievementMsg(EventDelegate.Callback callback)
     {
-        sInst = this;
         isSingle = true;
-        OnCloseCallback = callback;
-        mUIResPath = "ARGame/Msg/gameAchievementMsg";
+        mCloseCallback = callback;
+        mUIResPath = "ARGame/Msg/rainbowGameAchievementMsg";
     }
 
     public static void ShowAchievementMsg(EventDelegate.Callback callback)
     {
-        if (null == sInst)
-        {
-            object[] args = new object[1];
-            args[0] = callback;
-            SingletonObject<PopWinManager>.GetInst().ShowPopWin(typeof(ShowGameAchievementMsg), args);
-        } else
-        {
-            sInst.OnShow();
-        }
+        object[] args = new object[1];
+        args[0] = callback;
+        SingletonObject<PopWinManager>.GetInst().ShowPopWin(typeof(RainbowAchievementMsg), args);
     }
 
     protected override void FirstOpen()
@@ -72,10 +64,9 @@ public class ShowGameAchievementMsg : BasePopWin
     protected override void Close()
     {
         base.Close();
-        if (null != OnCloseCallback)
+        if (null != mCloseCallback)
         {
-            OnCloseCallback();
+            mCloseCallback();
         }
-        sInst = null;
     }
 }

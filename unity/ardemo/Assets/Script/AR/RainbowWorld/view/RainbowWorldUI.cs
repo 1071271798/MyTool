@@ -492,13 +492,6 @@ public class RainbowWorldUI : BaseUI {
     void GameOver()
     {
         OnHideAllInputBtn();
-        PromptMsg.ShowSinglePrompt("游戏失败", delegate (GameObject obj)
-        {
-            SingletonObject<RainbowWorldCtrl>.GetInst().RestartGame();
-        }, null, delegate(BasePopWin msg) {
-            PromptMsg promptMsg = (PromptMsg)msg;
-            promptMsg.SetRightBtnText("重新开始");
-        });
     }
 
 

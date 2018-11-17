@@ -53,7 +53,7 @@ GameObject:
   - component: {fileID: 4247009137254290}
   - component: {fileID: 114072357711054956}
   m_Layer: 0
-  m_Name: gameAchievementMsg
+  m_Name: rainbowGameAchievementMsg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -35,7 +35,7 @@ public enum EGameState : byte
     Game_Show_Color,
     Game_Wait,
     Game_Input,
-    Game_Update,
+    Game_Failure,
     Game_Over,
 }
 /// <summary>
@@ -54,4 +54,12 @@ public enum EInputDirection : byte
 {
     Input_Left,
     Input_Right,
+}
+/// <summary>
+/// 游戏分数状态
+/// </summary>
+public enum EGameScoreState : byte
+{
+    Score_Normal,
+    Score_High,
 }

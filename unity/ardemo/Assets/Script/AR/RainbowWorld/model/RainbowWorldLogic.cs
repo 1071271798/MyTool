@@ -9,6 +9,7 @@ public class RainbowWorldLogic
     EGameState mGameState;
     RainbowGameLevel mGameLevel;
     RainbowGameScore mGameScore;
+    
     ColorOut mColorOut;
     ColorInput mColorInput;
     int mFailureCount;
@@ -21,6 +22,12 @@ public class RainbowWorldLogic
 
     long mShowColorIndex = -1;
     bool isPlaying = false;
+
+
+    public int GameScore
+    {
+        get { return mGameScore.Score; }
+    }
 
     public RainbowWorldLogic()
     {
@@ -38,6 +45,7 @@ public class RainbowWorldLogic
         mColorInput = new ColorInput();
         mGameScore = new RainbowGameScore();
         isPlaying = true;
+        mFailureCount = 0;
     }
     /// <summary>
     /// 重新开始游戏
@@ -137,13 +145,45 @@ public class RainbowWorldLogic
                 
             } else if (state == EColorInputState.Input_Error)
             {//输入错误，游戏结束
-                GameOver();
+                if (mFailureCount <= RainbowGlobal.GameRemainderCountMax)
+                {
+                    GameFailure();
+                } else
+                {
+                    GameOver();
+                }
+                ++mFailureCount;
             } else if (state == EColorInputState.Input_Wait)
             {//需等待下一颜色
             }
             return state;
         }
         return EColorInputState.Input_None;
+    }
+    /// <summary>
+    /// 获取剩余游戏次数
+    /// </summary>
+    /// <returns></returns>
+    public int GetGameRemainderCount()
+    {
+        return RainbowGlobal.GameRemainderCountMax - mFailureCount;
+    }
+    /// <summary>
+    /// 放弃继续游戏
+    /// </summary>
+    public void GiveUpGame()
+    {
+        if (mGameState == EGameState.Game_Failure)
+        {
+            GameOver();
+        }
+    }
+    /// <summary>
+    /// 重新开始本关卡
+    /// </summary>
+    public void RestartNowLevel()
+    {
+        StartShowColor();
     }
 
 
@@ -247,8 +287,16 @@ public class RainbowWorldLogic
         SetGameSate(EGameState.Game_Over);
         //保存游戏分数
 
+        mFailureCount = 0;
         mGameLevel.Reset();
         mGameScore.Reset();
+    }
+    /// <summary>
+    /// 游戏失败
+    /// </summary>
+    void GameFailure()
+    {
+        SetGameSate(EGameState.Game_Failure);
     }
 
     /// <summary>

@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using Game;
+using Game.Scene;
+using System.Collections.Generic;
 /// <summary>
 /// 彩虹世界游戏控制
 /// </summary>
 public class RainbowWorldCtrl : SingletonObject<RainbowWorldCtrl>
 {
     RainbowWorldLogic mGameLogic;
+    GameStateCallBack mGameStateCallback;
 
     public RainbowWorldCtrl()
     {
@@ -21,7 +24,8 @@ public class RainbowWorldCtrl : SingletonObject<RainbowWorldCtrl>
     /// <param name="countdownCallBack">倒计时回调</param>
     public void GameStart(EGameDifficulty difficulty, GameStateCallBack stateCallback, GameShowColorCallBack showColorCallback, IntParamCallBack levelUpCallBack, GameScoreChangeCallBack scoreCallback, IntParamCallBack countdownCallBack)
     {
-        mGameLogic.SetGameStateCallBack(stateCallback);
+        mGameStateCallback = stateCallback;
+        mGameLogic.SetGameStateCallBack(GameStateCallback);
         mGameLogic.SetGameShowColorCallBack(showColorCallback);
         mGameLogic.SetGameLevelUpCallback(levelUpCallBack);
         mGameLogic.SetGameScoreChangeCallBack(scoreCallback);
@@ -63,5 +67,70 @@ public class RainbowWorldCtrl : SingletonObject<RainbowWorldCtrl>
     public EColorType GetNowColorOut()
     {
         return mGameLogic.GetNowColorOut();
+    }
+
+    void GameStateCallback(EGameState state)
+    {
+        switch (state)
+        {
+            case EGameState.Game_Select:
+                break;
+            case EGameState.Game_Ready:
+                break;
+            case EGameState.Game_Countdown:
+                break;
+            case EGameState.Game_Pause:
+                break;
+            case EGameState.Game_Show_Color:
+                break;
+            case EGameState.Game_Wait:
+                break;
+            case EGameState.Game_Input:
+                break;
+            case EGameState.Game_Failure:
+                RainbowGameFailureMsg.ShowGameFailureMsg(mGameLogic.GetGameRemainderCount(), GameFailureCancelCallback, GameFailureConfirmCallback);
+                break;
+            case EGameState.Game_Over:
+                RainbowGameOverMsg.ShowGameOverMsg(EGameScoreState.Score_Normal, mGameLogic.GameScore, GameOverQuitCallback, GameOverRestartCallback);
+                break;
+            default:
+                break;
+        }
+        if (null != mGameStateCallback)
+        {
+            mGameStateCallback(state);
+        }
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// 游戏失败，点击取消按钮，游戏结束
+    /// </summary>
+    void GameFailureCancelCallback()
+    {
+        mGameLogic.GiveUpGame();
+    }
+    /// <summary>
+    /// 游戏失败，点击确认按钮，游戏继续
+    /// </summary>
+    void GameFailureConfirmCallback()
+    {
+        mGameLogic.RestartNowLevel();
+    }
+
+    /// <summary>
+    /// 游戏结束，点击退出按钮，返回游戏菜单
+    /// </summary>
+    void GameOverQuitCallback()
+    {
+        GameMenuScene.GotoGameMenu(EGameMenuType.RainbowWorld);
+    }
+    /// <summary>
+    /// 游戏结束，点击重玩按钮，游戏重新开始
+    /// </summary>
+    void GameOverRestartCallback()
+    {
+        mGameLogic.RestartGame();
     }
 }
