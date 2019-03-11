@@ -14,7 +14,16 @@ public class ColorOut
 
     public ColorOut()
     {
-        UnityEngine.Random.InitState((int)(DateTime.Now.Ticks / 100000) + UnityEngine.Random.Range(0, 1000));
+        UnityEngine.Random.InitState((int)(DateTime.Now.Ticks / 100000) + UnityEngine.Random.Range(0, 10000));
+    }
+    /// <summary>
+    /// 按照固定颜色初始化，用于游戏引导
+    /// </summary>
+    /// <param name="outList"></param>
+    public ColorOut(List<EColorType> outList)
+    {
+        this.mColorList = outList;
+        mNowIndex = 0;
     }
 
     /// <summary>

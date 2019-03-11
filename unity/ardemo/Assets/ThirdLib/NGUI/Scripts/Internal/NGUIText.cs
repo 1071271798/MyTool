@@ -822,7 +822,84 @@ static public class NGUIText
 		return v;
 	}
 
-	static BetterList<float> mSizes = new BetterList<float>();
+    static public Vector2 CalculatePrintedSize(string text, UILabel lb, float lineHight)
+    {
+        Vector2 v = Vector2.zero;
+        fontSize = lb.fontSize;
+        fontStyle = lb.fontStyle;
+        if (!string.IsNullOrEmpty(text))
+        {
+            // When calculating printed size, get rid of all symbols first since they are invisible anyway
+            if (encoding) text = StripSymbols(text);
+
+            // Ensure we have characters to work with
+            Prepare(text);
+
+            float x = 0f, y = 0f, maxX = lb.width;
+            int textLength = text.Length, ch = 0, prev = 0;
+
+            for (int i = 0; i < textLength; ++i)
+            {
+                ch = text[i];
+
+                // Start a new line
+                if (ch == '\n')
+                {
+                    if (x > maxX) maxX = x;
+                    x = 0f;
+                    y += lineHight;
+                    continue;
+                }
+
+                // Skip invalid characters
+                if (ch < ' ') continue;
+
+                // See if there is a symbol matching this text
+                BMSymbol symbol = useSymbols ? GetSymbol(text, i, textLength) : null;
+
+                if (symbol == null)
+                {
+                    float w = GetGlyphWidth(ch, prev);
+
+                    if (w != 0f)
+                    {
+                        w += finalSpacingX;
+
+                        if (Mathf.RoundToInt(x + w) > rectWidth)
+                        {
+                            if (x > maxX) maxX = x - finalSpacingX;
+                            x = w;
+                            y += lineHight;
+                        }
+                        else x += w;
+
+                        prev = ch;
+                    }
+                }
+                else
+                {
+                    float w = finalSpacingX + symbol.advance * fontScale;
+
+                    if (Mathf.RoundToInt(x + w) > rectWidth)
+                    {
+                        if (x > maxX) maxX = x - finalSpacingX;
+                        x = w;
+                        y += lineHight;
+                    }
+                    else x += w;
+
+                    i += symbol.sequence.Length - 1;
+                    prev = 0;
+                }
+            }
+
+            v.x = ((x > maxX) ? x - finalSpacingX : maxX);
+            v.y = (y + lineHight);
+        }
+        return v;
+    }
+
+    static BetterList<float> mSizes = new BetterList<float>();
 
 	/// <summary>
 	/// Calculate the character index offset required to print the end of the specified text.

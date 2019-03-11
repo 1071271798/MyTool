@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
+/// <summary>
 /// 彩虹世界分数
 /// </summary>
 public class RainbowGameScore
@@ -47,13 +49,43 @@ public class RainbowGameScore
             case EGameDifficulty.Easy:
             case EGameDifficulty.Normal:
                 score = 100;
+                level += 10;
                 break;
             case EGameDifficulty.Hard:
                 score = 200;
+                level += 20;
                 break;
         }
-        score = score * colorCount * level - (colorCount - 1) * score;
+        score = score * colorCount * level / 10 - (colorCount - 1) * score;
         mScore += score;
+        return score;
+    }
+
+    /// <summary>
+    /// 减去已获得分数，用于重置本关卡
+    /// </summary>
+    /// <param name="difficulty"></param>
+    /// <param name="list"></param>
+    /// <param name="level"></param>
+    /// <returns></returns>
+    public int SubFrontInputScore(EGameDifficulty difficulty, List<EColorType> list, int level)
+    {
+        int score = 0;
+        if (null != list)
+        {
+            switch (difficulty)
+            {
+                case EGameDifficulty.Easy:
+                case EGameDifficulty.Normal:
+                    score = -100;
+                    break;
+                case EGameDifficulty.Hard:
+                    score = -200;
+                    break;
+            }
+            score *= list.Count;
+            mScore += score;
+        }
         return score;
     }
 

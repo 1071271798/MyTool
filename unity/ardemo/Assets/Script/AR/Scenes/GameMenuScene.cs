@@ -11,7 +11,7 @@ public class GameMenuScene : BaseScene
     {
         mUIList = new List<BaseUI>();
         mMenuType = menuType;
-        mMenuUI = new GameMenuUI();
+        mMenuUI = new GameMenuUI(mMenuType);
         mUIList.Add(mMenuUI);
     }
 
@@ -20,9 +20,7 @@ public class GameMenuScene : BaseScene
         try
         {
             base.FirstOpen();
-            mBtnDelegate = new ButtonDelegate();
-            mBtnDelegate.onClick = OnButtonClick;
-            mMenuUI.Open(mBtnDelegate);
+            mMenuUI.Open();
 
         }
         catch (System.Exception ex)
@@ -45,30 +43,7 @@ public class GameMenuScene : BaseScene
         try
         {
             base.OnButtonClick(obj);
-            string name = obj.name;
-            switch (name)
-            {
-                case "Btn_Help":
-                    {
-
-                    }
-                    break;
-                case "Btn_Reward":
-                    {
-
-                    }
-                    break;
-                case "Btn_Difficulty":
-                    {
-
-                    }
-                    break;
-                case "Btn_Start":
-                    {
-                        ClickBtnStart();
-                    }
-                    break;
-            }
+            
 
         }
         catch (System.Exception ex)
@@ -80,17 +55,15 @@ public class GameMenuScene : BaseScene
     }
 
 
-    void ClickBtnStart()
+    void QuitGameScene()
     {
-        if (mMenuType == EGameMenuType.RainbowWorld)
-        {
-            //SceneMgr.EnterScene(SceneType.EmptyScene, typeof(ARScene));
-            SceneMgr.EnterScene(SceneType.EmptyScene, typeof(RainbowWorldScene));
-        }
+        
     }
+
 }
 
 public enum EGameMenuType : byte
 {
     RainbowWorld = 0,
+    RainbowWorld_HowToPlay,
 }

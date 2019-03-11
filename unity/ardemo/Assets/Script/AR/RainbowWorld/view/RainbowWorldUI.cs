@@ -14,13 +14,14 @@ public class RainbowWorldUI : BaseUI {
     UILabel mGameLevelNumLabel;
     UILabel mGameScoreNumLabel;
     UILabel mColorCountNumLabel;
+    UILabel mAgainCountLabel;
 
     long mShowRainbowIndex = -1;
     long mShowColorIndex = -1;
 
     int mColorCount;
 
-    Dictionary<EColorType, ColorBtnData> mInputBtnDict;
+    Dictionary<EColorType, DoubleColorBtnData> mInputBtnDict;
 
     Transform mReadyTrans;
     UILabel mReadyLabel;
@@ -32,6 +33,10 @@ public class RainbowWorldUI : BaseUI {
     GameObject mBottomLeftObj;
     GameObject mBottomRightObj;
 
+    EColorType mTargetColor;
+
+    UIButton mAgainButton;
+
     public RainbowWorldUI()
     {
         mUIResPath = "ARGame/UI/rainbowWorldUI";
@@ -40,6 +45,61 @@ public class RainbowWorldUI : BaseUI {
     public void StartGame()
     {
         SingletonObject<RainbowWorldCtrl>.GetInst().GameStart(EGameDifficulty.Easy, GameStateChangeCallBack, ShowColorCallBack, GameLevelUpCallBack, GameScoreChangeCallBack, ShowReadNumCallback);
+    }
+    /// <summary>
+    /// 显示颜色按钮灯光特效
+    /// </summary>
+    /// <param name="color"></param>
+    public void ShowLightForInputBtn(EColorType color)
+    {
+        if (ColorUtils.IsTrichromatic(color))
+        {
+            if (mInputBtnDict.ContainsKey(color))
+            {
+                mInputBtnDict[color].ShowEffect();
+            }
+        }
+        else
+        {
+            List<EColorType> list = ColorUtils.GetDecomposeColor(color);
+            for (int i = 0, imax = list.Count; i < imax; ++i)
+            {
+                if (mInputBtnDict.ContainsKey(list[i]))
+                {
+                    mInputBtnDict[list[i]].ShowEffect();
+                }
+            }
+        }
+    }
+    /// <summary>
+    /// 设置颜色数量
+    /// </summary>
+    /// <param name="count"></param>
+    public void SetColorCount(int count)
+    {
+        mColorCount = count;
+        SetColorCountText(count);
+    }
+    /// <summary>
+    /// 设置重玩次数
+    /// </summary>
+    /// <param name="count"></param>
+    public void SetAgainCount(int count)
+    {
+        if (null != mAgainCountLabel)
+        {
+            mAgainCountLabel.text = count.ToString();
+        }
+        if (null != mAgainButton)
+        {
+            if (count <= 0)
+            {
+                mAgainButton.OnSleep();
+            } else if (count == RainbowGlobal.GameResetLevelCountMax)
+            {
+                mAgainButton.OnAwake();
+            }
+        }
     }
 
     protected override void Close()
@@ -53,20 +113,22 @@ public class RainbowWorldUI : BaseUI {
         {
             Timer.Cancel(mShowColorIndex);
         }
+        SingletonObject<RainbowWorldCtrl>.GetInst().UnRegisterGameUI();
     }
 
-    protected override void AddEvent()
+    protected override void FirstOpen()
     {
         try
         {
-            base.AddEvent();
+            base.FirstOpen();
+            SingletonObject<RainbowWorldCtrl>.GetInst().RegisterGameUI(this);
             if (null != mTrans)
             {
                 Transform bottomLeft = mTrans.Find("bottomLeft");
                 Transform bottomRight = mTrans.Find("bottomRight");
                 SetColorBtnLayout(bottomLeft, UIWidget.Pivot.BottomLeft);
                 SetColorBtnLayout(bottomRight, UIWidget.Pivot.BottomRight);
-                mInputBtnDict = new Dictionary<EColorType, ColorBtnData>();
+                mInputBtnDict = new Dictionary<EColorType, DoubleColorBtnData>();
                 if (null != bottomLeft)
                 {
                     mBottomLeftObj = bottomLeft.gameObject;
@@ -75,7 +137,8 @@ public class RainbowWorldUI : BaseUI {
                         Transform btn = bottomLeft.Find(string.Format("Btn_L_{0}", ColorUtils.Trichromatic[i]));
                         if (null != btn)
                         {
-                            ColorBtnData data = new ColorBtnData(EInputDirection.Input_Left, btn.gameObject);
+                            DoubleColorBtnData data = new DoubleColorBtnData();
+                            data.InitBtnData(EInputDirection.Input_Left, btn.gameObject);
                             mInputBtnDict[ColorUtils.Trichromatic[i]] = data;
                         }
                     }
@@ -89,8 +152,15 @@ public class RainbowWorldUI : BaseUI {
                         Transform btn = bottomRight.Find(string.Format("Btn_R_{0}", ColorUtils.Trichromatic[i]));
                         if (null != btn)
                         {
-                            ColorBtnData data = new ColorBtnData(EInputDirection.Input_Right, btn.gameObject);
-                            mInputBtnDict[ColorUtils.Trichromatic[i]] = data;
+                            if (mInputBtnDict.ContainsKey(ColorUtils.Trichromatic[i]))
+                            {
+                                mInputBtnDict[ColorUtils.Trichromatic[i]].InitBtnData(EInputDirection.Input_Right, btn.gameObject);
+                            } else
+                            {
+                                DoubleColorBtnData data = new DoubleColorBtnData();
+                                data.InitBtnData(EInputDirection.Input_Right, btn.gameObject);
+                                mInputBtnDict[ColorUtils.Trichromatic[i]] = data;
+                            }
                         }
                     }
                     mBottomRightObj.SetActive(false);
@@ -122,7 +192,9 @@ public class RainbowWorldUI : BaseUI {
                 mTopRightTrans = mTrans.Find("topRight");
                 if (null != mTopRightTrans)
                 {
-                    GameHelper.SetPosition(mTopRightTrans, UIWidget.Pivot.TopRight, new Vector2(-300, PublicFunction.Margin_Normal.y));
+                    GameHelper.SetPosition(mTopRightTrans, UIWidget.Pivot.TopRight, PublicFunction.Back_Btn_Pos);
+                    mAgainButton = GameHelper.FindChildComponent<UIButton>(mTopRightTrans, "Btn_reset");
+                    mAgainCountLabel = GameHelper.FindChildComponent<UILabel>(mTopRightTrans, "Btn_reset/Label");
                 }
                 OnHideAllInputBtn();
                 mReadyTrans = mTrans.Find("ready");
@@ -157,6 +229,13 @@ public class RainbowWorldUI : BaseUI {
             EColorType inputColor = EColorType.None;
             switch (name)
             {
+                case "Btn_reset":
+                    {
+                        SingletonObject<RainbowWorldCtrl>.GetInst().AgainNowLevel();
+                    }
+                    return;
+                case "Btn_pause":
+                    return;
                 case "Btn_L_R":
                     inputColorFlag = true;
                     direction = EInputDirection.Input_Left;
@@ -190,11 +269,14 @@ public class RainbowWorldUI : BaseUI {
             }
             if (inputColorFlag)
             {
-                EColorType targetColor = SingletonObject<RainbowWorldCtrl>.GetInst().GetNowColorOut();
+                if (EColorType.None != mTargetColor)
+                {
+                    HideLightForInputBtn(mTargetColor);
+                }
                 EColorInputState state = SingletonObject<RainbowWorldCtrl>.GetInst().ClickColor(direction, inputColor);
                 if (state == EColorInputState.Input_Success)
                 {
-                    ShowInputColor(targetColor);
+                    ShowInputColor(mTargetColor);
                     SubColorCount();
                 }
             }
@@ -216,7 +298,7 @@ public class RainbowWorldUI : BaseUI {
     /// 游戏状态改变回调
     /// </summary>
     /// <param name="state"></param>
-    void GameStateChangeCallBack(EGameState state)
+    void GameStateChangeCallBack(EGameState state, params object[] args)
     {
         switch (state)
         {
@@ -227,13 +309,22 @@ public class RainbowWorldUI : BaseUI {
                 mColorCount = 0;
                 OnHideAllInputBtn();
                 break;
-            case EGameState.Game_Wait:
+            case EGameState.Game_Input_Finished:
                 OnHideAllInputBtn();
                 SingletonObject<UIManager>.GetInst().CloseMultiTouch();
                 break;
-            case EGameState.Game_Input:
+            case EGameState.Game_Open_Input:
                 OnShowAllInputBtn();
                 SingletonObject<UIManager>.GetInst().OpenMultiTouch();
+                break;
+            case EGameState.Game_Input:
+                if (null != args && args.Length > 0)
+                {
+                    mTargetColor = (EColorType)args[0];
+                }
+                break;
+            case EGameState.Game_Failure:
+                SingletonObject<UIManager>.GetInst().CloseMultiTouch();
                 break;
             case EGameState.Game_Over:
                 GameOver();
@@ -251,9 +342,9 @@ public class RainbowWorldUI : BaseUI {
     /// <summary>
     /// 游戏分数改变
     /// </summary>
-    /// <param name="addScore"></param>
+    /// <param name="changeScore"></param>
     /// <param name="totalScore"></param>
-    void GameScoreChangeCallBack(int addScore, int totalScore)
+    void GameScoreChangeCallBack(int changeScore, int totalScore)
     {
         SetGameScore(totalScore);
     }
@@ -366,7 +457,7 @@ public class RainbowWorldUI : BaseUI {
     /// <summary>
     /// 隐藏游戏UI
     /// </summary>
-    void OnHideGameUI()
+    public void OnHideGameUI()
     {
         if (null != mTopLeftTrans)
         {
@@ -384,7 +475,7 @@ public class RainbowWorldUI : BaseUI {
     /// <summary>
     /// 显示游戏UI
     /// </summary>
-    void OnShowGameUI()
+    public void OnShowGameUI()
     {
         if (null != mTopLeftTrans)
         {
@@ -456,7 +547,7 @@ public class RainbowWorldUI : BaseUI {
     void AddColorCount()
     {
         mColorCount++;
-        SetColorCount(mColorCount);
+        SetColorCountText(mColorCount);
     }
     /// <summary>
     /// 减少计数
@@ -464,14 +555,39 @@ public class RainbowWorldUI : BaseUI {
     void SubColorCount()
     {
         --mColorCount;
-        SetColorCount(mColorCount);
+        SetColorCountText(mColorCount);
     }
 
-    void SetColorCount(int count)
+    void SetColorCountText(int count)
     {
         if (null != mColorCountNumLabel)
         {
             mColorCountNumLabel.text = count.ToString();
+        }
+    }
+
+    void HideLightForInputBtn(EColorType color)
+    {
+        if (null == mInputBtnDict || mInputBtnDict.Count < 1)
+        {
+            return;
+        }
+        if (ColorUtils.IsTrichromatic(color))
+        {
+            if (mInputBtnDict.ContainsKey(color))
+            {
+                mInputBtnDict[color].HideEffect();
+            }
+        } else
+        {
+            List<EColorType> list = ColorUtils.GetDecomposeColor(color);
+            for (int i = 0, imax = list.Count; i < imax; ++i)
+            {
+                if (mInputBtnDict.ContainsKey(list[i]))
+                {
+                    mInputBtnDict[list[i]].HideEffect();
+                }
+            }
         }
     }
 
@@ -498,17 +614,86 @@ public class RainbowWorldUI : BaseUI {
 
 
     //////////////////////////////////////////////////////////////////////////
+    class DoubleColorBtnData
+    {
+        public ColorBtnData leftBtn;
+        public ColorBtnData rightBtn;
+
+        public DoubleColorBtnData()
+        {
+
+        }
+
+        public void InitBtnData(EInputDirection direction, GameObject obj)
+        {
+            if (direction == EInputDirection.Input_Left)
+            {
+                leftBtn = new ColorBtnData(direction, obj);
+            } else
+            {
+                rightBtn = new ColorBtnData(direction, obj);
+            }
+        }
+
+        public void ShowEffect()
+        {
+            if (null != leftBtn)
+            {
+                leftBtn.ShowEffect();
+            }
+            if (null != rightBtn)
+            {
+                rightBtn.ShowEffect();
+            }
+        }
+
+        public void HideEffect()
+        {
+            if (null != leftBtn)
+            {
+                leftBtn.HideEffect();
+            }
+            if (null != rightBtn)
+            {
+                rightBtn.HideEffect();
+            }
+        }
+    }
+
     class ColorBtnData
     {
         public EInputDirection direction;
         public GameObject btnGameObject;
+        public GameObject effectGameObject;
         public UIButton button;
 
         public ColorBtnData(EInputDirection direction, GameObject obj)
         {
             this.direction = direction;
             this.btnGameObject = obj;
+            Transform effect = obj.transform.Find("effect");
+            {
+                effectGameObject = effect.gameObject;
+            }
             button = obj.GetComponent<UIButton>();
         }
+
+        public void ShowEffect()
+        {
+            if (null != effectGameObject)
+            {
+                effectGameObject.SetActive(true);
+            }
+        }
+
+        public void HideEffect()
+        {
+            if (null != effectGameObject)
+            {
+                effectGameObject.SetActive(false);
+            }
+        }
     }
+
+    
 }

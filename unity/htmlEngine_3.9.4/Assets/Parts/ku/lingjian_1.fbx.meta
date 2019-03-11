@@ -1,0 +1,498 @@
+fileFormatVersion: 2
+guid: 2b3cef38a3e12c240afca30f8ae9240e
+ModelImporter:
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: c1
+    100002: c10
+    100004: c11
+    100006: c12
+    100008: c13
+    100010: c14
+    100012: c15
+    100014: c3
+    100016: c4
+    100018: c5
+    100020: c6
+    100022: c7
+    100024: c8
+    100026: c9
+    100028: DP
+    100030: DP 1
+    100032: fangxiang
+    100034: fangxiang 1
+    100036: fangxiang 10
+    100038: fangxiang 2
+    100040: fangxiang 3
+    100042: fangxiang 4
+    100044: fangxiang 5
+    100046: fangxiang 6
+    100048: fangxiang 7
+    100050: fangxiang 8
+    100052: fangxiang 9
+    100054: fangxiang1
+    100056: fangxiang10
+    100058: fangxiang2
+    100060: fangxiang2 1
+    100062: fangxiang3
+    100064: fangxiang4
+    100066: fangxiang5
+    100068: fangxiang6
+    100070: fangxiang7
+    100072: fangxiang8
+    100074: fangxiang9
+    100076: Group
+    100078: group
+    100080: Group 1
+    100082: Group 10
+    100084: Group 11
+    100086: Group 12
+    100088: Group 2
+    100090: Group 3
+    100092: Group 4
+    100094: Group 5
+    100096: Group 6
+    100098: Group 7
+    100100: Group 8
+    100102: Group 9
+    100104: Group077
+    100106: //RootNode
+    100108: lp
+    100110: m1
+    100112: m12
+    100114: m14
+    100116: m14_001
+    100118: m16
+    100120: m17
+    100122: m18
+    100124: m19
+    100126: m20
+    100128: m21
+    100130: m22
+    100132: m23
+    100134: m24
+    100136: m25
+    100138: m26
+    100140: m27
+    100142: m28
+    100144: m3
+    100146: m34
+    100148: m35
+    100150: m36
+    100152: m37
+    100154: m38
+    100156: m46
+    100158: m47
+    100160: m48
+    100162: m49
+    100164: m5
+    100166: m50
+    100168: m51
+    100170: m53
+    100172: m54
+    100174: m67
+    100176: m68
+    100178: m69
+    100180: m7
+    100182: m70
+    100184: m71
+    100186: m72
+    100188: m78
+    100190: m79
+    100192: m8
+    100194: m9
+    100196: mc
+    100198: onoff
+    100200: onoff 1
+    100202: polySurface111
+    100204: polySurface113
+    100206: polySurface116
+    100208: polySurface120
+    100210: polySurface124
+    100212: polySurface127
+    100214: polySurface182
+    100216: polySurface184
+    100218: polySurface26
+    100220: polySurface33
+    100222: polySurface38
+    100224: polySurface39
+    100226: polySurface42
+    100228: polySurface73
+    100230: polySurface74
+    100232: pPlane1
+    100234: seivo
+    100236: m15
+    100238: seivo_IDBG
+    400000: c1
+    400002: c10
+    400004: c11
+    400006: c12
+    400008: c13
+    400010: c14
+    400012: c15
+    400014: c3
+    400016: c4
+    400018: c5
+    400020: c6
+    400022: c7
+    400024: c8
+    400026: c9
+    400028: DP
+    400030: DP 1
+    400032: fangxiang
+    400034: fangxiang 1
+    400036: fangxiang 10
+    400038: fangxiang 2
+    400040: fangxiang 3
+    400042: fangxiang 4
+    400044: fangxiang 5
+    400046: fangxiang 6
+    400048: fangxiang 7
+    400050: fangxiang 8
+    400052: fangxiang 9
+    400054: fangxiang1
+    400056: fangxiang10
+    400058: fangxiang2
+    400060: fangxiang2 1
+    400062: fangxiang3
+    400064: fangxiang4
+    400066: fangxiang5
+    400068: fangxiang6
+    400070: fangxiang7
+    400072: fangxiang8
+    400074: fangxiang9
+    400076: Group
+    400078: group
+    400080: Group 1
+    400082: Group 10
+    400084: Group 11
+    400086: Group 12
+    400088: Group 2
+    400090: Group 3
+    400092: Group 4
+    400094: Group 5
+    400096: Group 6
+    400098: Group 7
+    400100: Group 8
+    400102: Group 9
+    400104: Group077
+    400106: //RootNode
+    400108: lp
+    400110: m1
+    400112: m12
+    400114: m14
+    400116: m14_001
+    400118: m16
+    400120: m17
+    400122: m18
+    400124: m19
+    400126: m20
+    400128: m21
+    400130: m22
+    400132: m23
+    400134: m24
+    400136: m25
+    400138: m26
+    400140: m27
+    400142: m28
+    400144: m3
+    400146: m34
+    400148: m35
+    400150: m36
+    400152: m37
+    400154: m38
+    400156: m46
+    400158: m47
+    400160: m48
+    400162: m49
+    400164: m5
+    400166: m50
+    400168: m51
+    400170: m53
+    400172: m54
+    400174: m67
+    400176: m68
+    400178: m69
+    400180: m7
+    400182: m70
+    400184: m71
+    400186: m72
+    400188: m78
+    400190: m79
+    400192: m8
+    400194: m9
+    400196: mc
+    400198: onoff
+    400200: onoff 1
+    400202: polySurface111
+    400204: polySurface113
+    400206: polySurface116
+    400208: polySurface120
+    400210: polySurface124
+    400212: polySurface127
+    400214: polySurface182
+    400216: polySurface184
+    400218: polySurface26
+    400220: polySurface33
+    400222: polySurface38
+    400224: polySurface39
+    400226: polySurface42
+    400228: polySurface73
+    400230: polySurface74
+    400232: pPlane1
+    400234: seivo
+    400236: m15
+    400238: seivo_IDBG
+    2300000: c10
+    2300002: DP
+    2300004: DP 1
+    2300006: fangxiang
+    2300008: lp
+    2300010: m1
+    2300012: m12
+    2300014: m14_001
+    2300016: m16
+    2300018: m17
+    2300020: m18
+    2300022: m19
+    2300024: m20
+    2300026: m21
+    2300028: m22
+    2300030: m23
+    2300032: m24
+    2300034: m25
+    2300036: m26
+    2300038: m27
+    2300040: m28
+    2300042: m3
+    2300044: m34
+    2300046: m35
+    2300048: m36
+    2300050: m37
+    2300052: m38
+    2300054: m46
+    2300056: m47
+    2300058: m48
+    2300060: m49
+    2300062: m5
+    2300064: m50
+    2300066: m51
+    2300068: m53
+    2300070: m54
+    2300072: m67
+    2300074: m68
+    2300076: m69
+    2300078: m7
+    2300080: m70
+    2300082: m71
+    2300084: m72
+    2300086: m78
+    2300088: m79
+    2300090: m8
+    2300092: m9
+    2300094: onoff 1
+    2300096: polySurface111
+    2300098: polySurface113
+    2300100: polySurface116
+    2300102: polySurface120
+    2300104: polySurface124
+    2300106: polySurface127
+    2300108: polySurface182
+    2300110: polySurface184
+    2300112: polySurface26
+    2300114: polySurface33
+    2300116: polySurface38
+    2300118: polySurface39
+    2300120: polySurface42
+    2300122: polySurface73
+    2300124: polySurface74
+    2300126: pPlane1
+    2300128: m15
+    2300130: seivo_IDBG
+    3300000: c10
+    3300002: DP
+    3300004: DP 1
+    3300006: fangxiang
+    3300008: lp
+    3300010: m1
+    3300012: m12
+    3300014: m14_001
+    3300016: m16
+    3300018: m17
+    3300020: m18
+    3300022: m19
+    3300024: m20
+    3300026: m21
+    3300028: m22
+    3300030: m23
+    3300032: m24
+    3300034: m25
+    3300036: m26
+    3300038: m27
+    3300040: m28
+    3300042: m3
+    3300044: m34
+    3300046: m35
+    3300048: m36
+    3300050: m37
+    3300052: m38
+    3300054: m46
+    3300056: m47
+    3300058: m48
+    3300060: m49
+    3300062: m5
+    3300064: m50
+    3300066: m51
+    3300068: m53
+    3300070: m54
+    3300072: m67
+    3300074: m68
+    3300076: m69
+    3300078: m7
+    3300080: m70
+    3300082: m71
+    3300084: m72
+    3300086: m78
+    3300088: m79
+    3300090: m8
+    3300092: m9
+    3300094: onoff 1
+    3300096: polySurface111
+    3300098: polySurface113
+    3300100: polySurface116
+    3300102: polySurface120
+    3300104: polySurface124
+    3300106: polySurface127
+    3300108: polySurface182
+    3300110: polySurface184
+    3300112: polySurface26
+    3300114: polySurface33
+    3300116: polySurface38
+    3300118: polySurface39
+    3300120: polySurface42
+    3300122: polySurface73
+    3300124: polySurface74
+    3300126: pPlane1
+    3300128: m15
+    3300130: seivo_IDBG
+    4300000: DP
+    4300002: polySurface184
+    4300004: polySurface182
+    4300006: lp
+    4300008: onoff
+    4300010: m79
+    4300012: m78
+    4300014: m72
+    4300016: m71
+    4300018: m70
+    4300020: m69
+    4300022: m68
+    4300024: m67
+    4300026: m54
+    4300028: m53
+    4300030: m51
+    4300032: m50
+    4300034: m49
+    4300036: m48
+    4300038: m47
+    4300040: m46
+    4300042: m38
+    4300044: m37
+    4300046: m36
+    4300048: m35
+    4300050: m34
+    4300052: m28
+    4300054: m27
+    4300056: m26
+    4300058: m25
+    4300060: m24
+    4300062: m23
+    4300064: m22
+    4300066: m21
+    4300068: m20
+    4300070: m19
+    4300072: m18
+    4300074: m17
+    4300076: m16
+    4300078: m14_001
+    4300080: m12
+    4300082: m9
+    4300084: m8
+    4300086: m7
+    4300088: m5
+    4300090: m3
+    4300092: m1
+    4300094: polySurface127
+    4300096: polySurface124
+    4300098: polySurface120
+    4300100: polySurface116
+    4300102: polySurface113
+    4300104: c10
+    4300106: polySurface111
+    4300108: polySurface74
+    4300110: polySurface73
+    4300112: polySurface42
+    4300114: polySurface39
+    4300116: polySurface38
+    4300118: polySurface33
+    4300120: polySurface26
+    4300122: pPlane1
+    4300124: DP
+    4300126: fangxiang
+    4300128: m15
+    4300130: seivo_IDBG
+    9500000: //RootNode
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00999999978
+    meshCompression: 1
+    addColliders: 0
+    importBlendShapes: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 0
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  additionalBone: 0
+  userData: 

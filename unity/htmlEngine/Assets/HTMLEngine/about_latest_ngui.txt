@@ -1,0 +1,4 @@
+The original files only support the OLD version of the NGUI.
+If you want to use HTMLEngine with the lastest version of the NGUI.
+You can find some files like html_engine_for_ngui_3.0.9f1.unitypackage
+in the HTMLEngine folder.

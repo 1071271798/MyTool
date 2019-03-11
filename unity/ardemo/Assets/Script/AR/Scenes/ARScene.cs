@@ -1,5 +1,6 @@
 ﻿using Game;
 using Game.Platform;
+using Game.Resource;
 using System.Collections.Generic;
 using UnityEngine;
 using Vuforia;
@@ -7,9 +8,17 @@ using Vuforia;
 public class ARScene : BaseScene
 {
     protected Transform mARTrans;
+    protected Transform mARCameraTrans;
+    protected Vector3 mARCameraLocalposition = Vector3.zero;
+    protected Camera mARCamera;
     protected Transform mSceneRoot;
     protected UILabel mBottomLabel;
     protected GameObject mRecognitionObj;
+    protected Transform mTargetObjTrans;
+    protected ModelTrackerBehaviour mModelTracker;
+
+    bool mCameraTrackingFlag = false;
+    int mCameraTrackingCount = 0;
 
     long mRecognitionTimeIndex = -1;
     int mRecognitionFailedCount = 0;
@@ -27,7 +36,7 @@ public class ARScene : BaseScene
         try
         {
             base.LoadScene();
-            GameObject obj = Resources.Load("ARGame/Scene/ARScene", typeof(GameObject)) as GameObject;
+            GameObject obj = ResourcesEx.Load<GameObject>("ARGame/Scene/ARScene") as GameObject;
             if (null != obj)
             {
                 GameObject o = UnityEngine.Object.Instantiate(obj) as GameObject;
@@ -36,7 +45,19 @@ public class ARScene : BaseScene
                 mARTrans.parent = null;
                 mARTrans.localPosition = Vector3.zero;
                 mARTrans.localScale = Vector3.one;
-                mSceneRoot = mARTrans.Find("ObjectTarget/root");
+                mARTrans.localEulerAngles = Vector3.zero;
+                mARCameraTrans = mARTrans.Find("ARCamera");
+                if (null != mARCameraTrans)
+                {
+                    mARCamera = mARCameraTrans.GetComponent<Camera>();
+                }
+                mTargetObjTrans = mARTrans.Find("ObjectTarget");
+                mSceneRoot = mARTrans.Find("root");
+                if (null != mSceneRoot)
+                {
+                    mModelTracker = mSceneRoot.GetComponent<ModelTrackerBehaviour>();
+                }
+
                 VuforiaInitHandler handler = GameHelper.FindChildComponent<VuforiaInitHandler>(mARTrans, "ARCamera");
                 if (null != handler)
                 {
@@ -88,7 +109,6 @@ public class ARScene : BaseScene
                     mBottomLabel = GameHelper.FindChildComponent<UILabel>(bottom, "Label");
                 }
             }
-            FirstTrackingFound();
         }
         catch (System.Exception ex)
         {
@@ -106,6 +126,47 @@ public class ARScene : BaseScene
             mARTrans = null;
         }
         CancelStartGameTimer();
+    }
+
+    public override void LateUpdate()
+    {
+        base.LateUpdate();
+        if (null != mARCameraTrans)
+        {
+            if (mCameraTrackingFlag)
+            {
+                if (mARCameraTrans.localPosition.x == mARCameraLocalposition.x 
+                    && mARCameraTrans.localPosition.y == mARCameraLocalposition.y 
+                    && mARCameraTrans.localPosition.z == mARCameraLocalposition.z)
+                {
+                    ++mCameraTrackingCount;
+                    if (mCameraTrackingCount > 15)
+                    {//退出跟踪
+                        OnCameraTrackingStop();
+                        mCameraTrackingCount = 0;
+                        mCameraTrackingFlag = false;
+                    }
+                } else
+                {
+                    mCameraTrackingCount = 0;
+                }
+            } else
+            {
+                if (mARCameraTrans.localPosition.x != mARCameraLocalposition.x
+                    || mARCameraTrans.localPosition.y != mARCameraLocalposition.y
+                    || mARCameraTrans.localPosition.z != mARCameraLocalposition.z)
+                {
+                    ++mCameraTrackingCount;
+                    if (mCameraTrackingCount > 2)
+                    {//进入跟踪状态
+                        OnCameraTrackingStart();
+                        mCameraTrackingCount = 0;
+                        mCameraTrackingFlag = true;
+                    }
+                }
+            }
+            mARCameraLocalposition = mARCameraTrans.localPosition;
+        }
     }
 
     protected override void OnButtonClick(GameObject obj)
@@ -150,7 +211,10 @@ public class ARScene : BaseScene
         CancelRecognitionCheck();
         mRecognitionFailedCount = 0;
         HideRecognitionObj();
-        SetBottomabel("进入彩虹世界");
+        if (null != mModelTracker)
+        {
+            mModelTracker.OnTrackingFound();
+        }
         if (!mFirstTrackingFoundFlag)
         {
             FirstTrackingFound();
@@ -162,13 +226,39 @@ public class ARScene : BaseScene
     /// </summary>
     protected virtual void OnTrackingLost()
     {
-
+        if (null != mModelTracker)
+        {
+            mModelTracker.OnTrackingLost();
+        }
+    }
+    /// <summary>
+    /// 摄像头开始跟踪
+    /// </summary>
+    protected virtual void OnCameraTrackingStart()
+    {
+        Debug.Log("摄像头进入跟踪状态");
+        if (null != mModelTracker)
+        {
+            mModelTracker.OnCameraTrackingStart();
+        }
+    }
+    /// <summary>
+    /// 摄像头停止追踪
+    /// </summary>
+    protected virtual void OnCameraTrackingStop()
+    {
+        Debug.Log("摄像头退出跟踪状态");
+        if (null != mModelTracker)
+        {
+            mModelTracker.OnCameraTrackingStop();
+        }
     }
     /// <summary>
     /// 第一次识别到模型，会调用ar3d场景加载函数
     /// </summary>
     protected virtual void FirstTrackingFound()
     {
+        SetBottomabel("进入彩虹世界");
         LoadAR3DScene(mSceneRoot);
         CancelStartGameTimer();
         mStartGameIndex = Timer.Add(3, 1, 1, StartGame);
@@ -210,6 +300,40 @@ public class ARScene : BaseScene
         if (null != mBottomLabel)
         {
             mBottomLabel.text = text;
+        }
+    }
+
+    void ShowSceneRoot()
+    {
+        if (null != mSceneRoot)
+        {
+            var rendererComponents = mSceneRoot.GetComponentsInChildren<Renderer>(true);
+            var colliderComponents = mSceneRoot.GetComponentsInChildren<Collider>(true);
+
+            // Enable rendering:
+            foreach (var component in rendererComponents)
+                component.enabled = true;
+
+            // Enable colliders:
+            foreach (var component in colliderComponents)
+                component.enabled = true;            
+        }
+    }
+
+    void HideSceneRoot()
+    {
+        if (null != mSceneRoot)
+        {
+            var rendererComponents = mSceneRoot.GetComponentsInChildren<Renderer>(true);
+            var colliderComponents = mSceneRoot.GetComponentsInChildren<Collider>(true);
+
+            // Enable rendering:
+            foreach (var component in rendererComponents)
+                component.enabled = false;
+
+            // Enable colliders:
+            foreach (var component in colliderComponents)
+                component.enabled = false;
         }
     }
 
@@ -278,5 +402,5 @@ public class ARScene : BaseScene
         {
             mTrans.gameObject.SetActive(true);
         }
-    }
+    }    
 }

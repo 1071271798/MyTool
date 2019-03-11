@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Rendering;
 using Vuforia;
 
 public class VuforiaInitHandler : VuforiaMonoBehaviour
@@ -36,11 +37,22 @@ public class VuforiaInitHandler : VuforiaMonoBehaviour
         // Check for an initialization error on start.
         VuforiaRuntime.Instance.RegisterVuforiaInitErrorCallback(OnVuforiaInitializationError);
         VuforiaARController.Instance.RegisterVuforiaStartedCallback(OnVuforiaStarted);
+        VuforiaARController.Instance.RegisterVuforiaInitializedCallback(OnVuforiaInitialized);
         VuforiaARController.Instance.RegisterOnPauseCallback(OnPaused);
         GameObject backgroundPlane = GameObject.Find("ARCamera/BackgroundPlane");
         if (null != backgroundPlane)
         {
             PublicFunction.SetLayerRecursively(backgroundPlane, backgroundPlane.transform.parent.gameObject.layer);
+            MeshRenderer mr = backgroundPlane.GetComponent<MeshRenderer>();
+            if (null != mr)
+            {
+                mr.lightProbeUsage = LightProbeUsage.Off;
+                mr.reflectionProbeUsage = ReflectionProbeUsage.Off;
+                mr.shadowCastingMode = ShadowCastingMode.Off;
+                mr.receiveShadows = false;
+                mr.motionVectorGenerationMode = MotionVectorGenerationMode.ForceNoMotion;
+                mr.allowOcclusionWhenDynamic = false;
+            }
         }
 
     }
@@ -49,6 +61,7 @@ public class VuforiaInitHandler : VuforiaMonoBehaviour
     {
         VuforiaRuntime.Instance.UnregisterVuforiaInitErrorCallback(OnVuforiaInitializationError);
         VuforiaARController.Instance.UnregisterVuforiaStartedCallback(OnVuforiaStarted);
+        VuforiaARController.Instance.UnregisterVuforiaInitializedCallback(OnVuforiaInitialized);
         VuforiaARController.Instance.UnregisterOnPauseCallback(OnPaused);
     }
 
@@ -109,8 +122,16 @@ public class VuforiaInitHandler : VuforiaMonoBehaviour
         }
     }
 
+    void OnVuforiaInitialized()
+    {
+        VuforiaConfiguration.Instance.DeviceTracker.FusionMode = FusionProviderType.OPTIMIZE_MODEL_TARGETS_AND_SMART_TERRAIN;
+        var deviceTracker = TrackerManager.Instance.InitTracker<PositionalDeviceTracker>();
+        deviceTracker.Start();
+    }
+
     void OnVuforiaStarted()
     {
+        //CameraDevice.Instance.SetFocusMode(CameraDevice.FocusMode.FOCUS_MODE_TRIGGERAUTO);
         if (null != mStartedCallback)
         {
             mStartedCallback();

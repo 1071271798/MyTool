@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5d2542f7cfe3004189c264617612ae4, type: 3}
+  m_Name: rainbowGuideConfig
+  m_EditorClassIdentifier: 
+  guideList:
+  - id: 10101
+    skipId: 10201
+    nextId: 10102
+    text: Welcome to Rainbow World
+    activeEvent: 1
+    triggerEvent: 0
+    triggerTime: 0
+    style: 1
+    color: 
+  - id: 10102
+    skipId: 10201
+    nextId: 10103
+    text: Test your memory skills against the Enchanted Color Creator.
+    activeEvent: 0
+    triggerEvent: 0
+    triggerTime: 0
+    style: 1
+    color: 
+  - id: 10103
+    skipId: 10201
+    nextId: 10201
+    text: Can you and UnicornBot match the pattern shown on the screen to rescue the
+      rairied and save Rainbow World here?
+    activeEvent: 0
+    triggerEvent: 0
+    triggerTime: 0
+    style: 1
+    color: 
+  - id: 10201
+    skipId: 0
+    nextId: 10202
+    text: Let me show you how to play first!
+    activeEvent: 1
+    triggerEvent: 0
+    triggerTime: 0
+    style: 1
+    color: 
+  - id: 10202
+    skipId: 0
+    nextId: 10203
+    text: Watch and remember the color of UnicornBot light
+    activeEvent: 0
+    triggerEvent: 0
+    triggerTime: 0
+    style: 1
+    color: 
+  - id: 10203
+    skipId: 0
+    nextId: 10204
+    text: 
+    activeEvent: 0
+    triggerEvent: 1
+    triggerTime: 1
+    style: 0
+    color: 010204
+  - id: 10204
+    skipId: 0
+    nextId: 10205
+    text: Tap {0} in order as UnicornBot
+    activeEvent: 0
+    triggerEvent: 0
+    triggerTime: 0
+    style: 2
+    color: 010204
+  - id: 10205
+    skipId: 0
+    nextId: 10206
+    text: 
+    activeEvent: 0
+    triggerEvent: 2
+    triggerTime: 1
+    style: 0
+    color: 010204
+  - id: 10206
+    skipId: 0
+    nextId: 0
+    text: Good job! \n Let's start your own game.
+    activeEvent: 0
+    triggerEvent: 3
+    triggerTime: 2
+    style: 1
+    color: 

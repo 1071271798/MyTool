@@ -47,8 +47,19 @@ public class RainbowWorldScene : ARScene
     protected override void StartGame()
     {
         base.StartGame();
-        mRainbowUI.Open();
-        mRainbowUI.StartGame();
+        SingletonObject<RainbowWorldCtrl>.GetInst().GuideEventListener(EGameGuideEventID.First_Recognition_Success, delegate(ERainbowGuideTriggerEvent eventId) {
+            if (eventId == ERainbowGuideTriggerEvent.Trigger_Guide_Show_Color)
+            {
+                mRainbowUI.Open();
+                mRainbowUI.StartGame();
+            }
+        });
+        if (!SingletonObject<RainbowWorldCtrl>.GetInst().IsGuide())
+        {
+            mRainbowUI.Open();
+            mRainbowUI.StartGame();
+        }
+       
     }
 
     protected override void LoadAR3DScene(Transform sceneTrans)

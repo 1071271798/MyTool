@@ -1,4 +1,6 @@
-﻿public class VuforiaTrackableEventHandler : DefaultTrackableEventHandler
+﻿using UnityEngine;
+
+public class VuforiaTrackableEventHandler : DefaultTrackableEventHandler
 {
     protected EventDelegate.Callback mTrackingFound;
     protected EventDelegate.Callback mTrackingLost;
@@ -16,7 +18,17 @@
 
     protected override void OnTrackingFound()
     {
-        base.OnTrackingFound();
+        /*var rendererComponents = GetComponentsInChildren<Renderer>(true);
+        var colliderComponents = GetComponentsInChildren<Collider>(true);
+
+        // Enable rendering:
+        foreach (var component in rendererComponents)
+            component.enabled = true;
+
+        // Enable colliders:
+        foreach (var component in colliderComponents)
+            component.enabled = true;*/
+
         if (null != mTrackingFound)
         {
             mTrackingFound();
@@ -25,7 +37,7 @@
 
     protected override void OnTrackingLost()
     {
-        base.OnTrackingLost();
+        /*base.OnTrackingLost();*/
         if (null != mTrackingLost)
         {
             mTrackingLost();

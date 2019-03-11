@@ -89,7 +89,7 @@ public class RainbowGameLevel
     public bool InputFinished()
     {
         ++mRepeatCount;
-        if (mRepeatCount > 1)
+        if (mRepeatCount >= 1)
         {
             ++mLevel;
             mRepeatCount = 0;
