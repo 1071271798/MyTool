@@ -1,0 +1,46 @@
+2008-12-06  Miguel de Icaza  <miguel@novell.com>
+
+	* Lib/Constants.cs: Add a handful of extra contants.
+
+	* Lib/Codec.cs: Put here the coding/encoding routines that were
+	originally in egit's lib/Constants.java class
+
+	* Lib/*: Align some API doc comments, add some API docs.
+
+	* Lib/RefDatabase.cs (Peel): Implement.
+
+	* Lib/Constants.cs: Put all the constants here (not sure where
+	some new constants should have gone). 
+
+	* Lib/Ref.cs: Update to support `Peeled' property and
+	`OriginalName' from newer eGits.
+
+2008-12-03  Miguel de Icaza  <miguel@novell.com>
+
+	* test.cs: make the sample program dump all the refs.
+
+	* Lib/Repository.cs: Expose GetAllRefs.
+
+	* Lib/RefDatabase.cs (ReadOneLooseRef): Do not crash if the
+	refName is not present in the looseKeys.
+
+	(RefreshPackedRefs): If the packed-refs file does not exist, do
+	not try to continue, it would otherwise crash.
+
+	* Lib/WindowedFile.cs: Implement another file from the original
+	Java implementation.
+
+	* Lib/PackIndex.cs: Fix indentation of comment.
+
+	* Lib/WindowCursor.cs: Implement.
+
+2008-12-02  Miguel de Icaza  <miguel@novell.com>
+
+	* Lib/ByteArrayWindow.cs: Implement the functionality for
+	ByteArrayWindow, do not derive from ByteWindow which is a design
+	in the original Java implementation to use two different backends
+	for storage.
+
+	We could achieve the same in a cleaner way than the original
+	implementation if we choose to do so using an interface. 
+

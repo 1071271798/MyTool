@@ -1,0 +1,286 @@
+﻿<?xml version="1.0"?>
+<project name="GitSharp" default="run-tests">
+
+  <property name="build.config" value="debug" overwrite="false" />
+  <property name="build.platform" value="${nant.settings.currentframework}" />
+  <property name="build.defines" value="TRACE;LINQ;DEBUG" />
+
+  <property name="build.runs.on.mono" value="${(framework::get-family(framework::get-runtime-framework()) == 'mono')}" />
+  
+  <property name="path.base" value="${project::get-base-directory()}"/>
+  <property name="path.build" value="${path.base}/build"/>
+  <property name="path.lib" value="${path.base}/lib"/>
+  <property name="path.dist" value="${path.base}/dist"/>
+  <property name="path.tools" value="${path.base}/tools"/>
+  <property name="path.tools.nunit" value="${path.tools}/nunit"/>
+
+  <!-- Revision version detection. If build.vcs.number hasn't been passed through command line argument, version revision is set to 'local-build' -->
+  <property name="build.vcs.number.1" value="" overwrite="false"/>
+  <property name="version.revision" value="local-build" />
+
+  <if test="${(string::get-length(build.vcs.number.1) != 0)}">
+    <property name="version.revision" value="${build.vcs.number.1}" />
+  </if>
+
+  <property name="version.major" value="${version::get-major(version::parse(version))}" dynamic="true"/>
+  <property name="version.minor" value="${version::get-minor(version::parse(version))}" dynamic="true"/>
+  <property name="version.build" value="${version::get-build(version::parse(version))}" dynamic="true"/>
+  <property name="build.version" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true"/>
+
+  <target name="rebuild" depends="clean, run-tests"/>
+
+  <target name="clean">
+    <delete dir="${path.build}" if="${directory::exists(path.build)}"/>
+    <delete dir="${path.dist}" if="${directory::exists(path.dist)}"/>
+  </target>
+
+  <target name="dist" depends="run-tests, package"/>
+
+  <!-- ********************************************** -->
+  <!-- GitSharp.Core.dll -->
+  <!-- ********************************************** -->
+  <target name="compile-core" depends="init">
+    <property name="assembly.name" value="GitSharp.Core" />
+    <property name="assembly.type" value="library" />
+    <property name="project.directory" value="${assembly.name}" />
+
+    <property name="assembly.namespace" value="${assembly.name}" />
+    
+    <fileset id="project.references" >
+      <include name="System.dll" />
+      <include name="System.Core.dll" />
+      <include name="System.Xml.dll" />
+      <include name="${path.lib}/ICSharpCode.SharpZipLib.dll" />
+      <include name="${path.lib}/Winterdom.IO.FileMap.dll" />
+      <include name="${path.lib}/Tamir.SharpSSH.dll" />
+    </fileset>
+
+    <call target="compile-dll" />
+  </target>
+
+  <!-- ********************************************** -->
+  <!-- git.exe -->
+  <!-- ********************************************** -->
+  <target name="compile-cli" depends="compile-gitsharp">
+    <property name="assembly.name" value="GitSharp.Git" />
+    <property name="assembly.type" value="exe" />
+    <property name="project.directory" value="Git" />
+
+    <property name="assembly.namespace" value="GitSharp.CLI" />
+    
+    <fileset id="project.references" basedir="${path.build.output}" >
+      <include name="GitSharp.dll" />
+      <include name="GitSharp.Core.dll" />
+    </fileset>
+
+    <copy todir="${path.build.output}">
+      <fileset basedir="${path.base}/Git">
+        <include name="Commands.xml" />
+      </fileset>
+    </copy>
+
+    <call target="compile-dll" />
+  </target>
+
+  <!-- ********************************************** -->
+  <!-- GitSharp.dll -->
+  <!-- ********************************************** -->
+  <target name="compile-gitsharp" depends="compile-core">
+    <property name="assembly.name" value="GitSharp" />
+    <property name="assembly.type" value="library" />
+    <property name="project.directory" value="${assembly.name}" />
+
+    <property name="assembly.namespace" value="${assembly.name}" />
+
+    <fileset id="project.references" basedir="${path.build.output}" >
+      <include name="System.dll" />
+      <include name="System.Core.dll" />
+      <include name="GitSharp.Core.dll" />
+      <include name="${path.lib}/Tamir.SharpSSH.dll" />
+    </fileset>
+
+    <call target="compile-dll" />
+  </target>
+
+  <!-- ********************************************** -->
+  <!-- GitSharp.Tests.dll -->
+  <!-- ********************************************** -->
+  <target name="compile-tests" depends="compile-cli">
+    <property name="assembly.name" value="GitSharp.Tests" />
+    <property name="assembly.type" value="library" />
+    <property name="project.directory" value="${assembly.name}" />
+
+    <property name="assembly.namespace" value="${assembly.name}" />
+
+    <fileset id="project.references" >
+      <include name="${path.build.output}/GitSharp.dll" />
+      <include name="${path.build.output}/GitSharp.Core.dll" />
+      <include name="${path.build.output}/GitSharp.Git.exe" />
+      <include name="${path.tools.nunit}/nunit.framework.dll" />
+    </fileset>
+
+    <call target="compile-dll" />
+  </target>
+
+  <!-- ********************************************** -->
+  <!-- run tests -->
+  <!-- ********************************************** -->
+  <target name="run-tests"  depends="compile-tests">
+    <property name="path.testresults" value="${path.build}/${build.platform}-${build.config}/test-results" />
+
+    <mkdir dir="${path.testresults}" if="${not(directory::exists(path.testresults))}"/>
+    <echo message="path.testresults = ${path.testresults}"/>
+
+    <copy todir="${path.testresults}">
+      <fileset basedir="${path.base}/GitSharp.Tests/Resources">
+        <include name="${path.build.output}/*.dll" />
+        <include name="${path.build.output}/GitSharp.Git.exe" />
+      </fileset>
+    </copy>
+
+    <copy todir="${path.testresults}/Resources">
+      <fileset basedir="${path.base}/GitSharp.Tests/Resources">
+        <include name="**" />
+      </fileset>
+    </copy>
+
+    <property name="nunit.consolerunner" value="${path.tools.nunit}/nunit-console.exe" />
+    <property name="nunit.commandline" value="GitSharp.Tests.dll /xml:GitSharp.Tests.dll-results.xml /noshadow " />
+    <if test="${build.runs.on.mono}">
+      <property name="nunit.consolerunner" value="nunit-console2" />
+      <property name="nunit.commandline" value="GitSharp.Tests.dll -xml:GitSharp.Tests.dll-results.xml -noshadow " />
+    </if>
+
+    <exec verbose="true"
+      program="${nunit.consolerunner}"
+      workingdir="${path.testresults}"
+      commandline="${nunit.commandline}"
+      failonerror="true"
+			/>
+
+
+    <property name="debugger.file.path.before" value="${path.build.output}/GitSharp.Git.pdb" />
+    <property name="debugger.file.path.after" value="${path.build.output}/Git.pdb"  />
+
+    <property name="debugger.file.path.before" value="${path.build.output}/GitSharp.Git.exe.mdb" if="${build.runs.on.mono}" />
+    <property name="debugger.file.path.after" value="${path.build.output}/Git.exe.mdb" if="${build.runs.on.mono}" />
+
+
+    <move file="${path.build.output}/GitSharp.Git.exe" tofile="${path.build.output}/Git.exe" />
+    <move file="${debugger.file.path.before}" tofile="${debugger.file.path.after}" />
+    <move file="${path.build.output}/GitSharp.Git.xml" tofile="${path.build.output}/Git.xml" />
+  </target>
+
+  <target name="init">
+    <loadfile file="version.txt" property="version" />
+
+    <mkdir dir="${path.build}" if="${not(directory::exists(path.build))}"/>
+
+    <property name="path.build.output" value="${path.build}/${build.platform}-${build.config}/bin"/>
+
+    <echo message="build.version = ${build.version}"/>
+    <echo message="path.build.output = ${path.build.output}"/>
+
+    <mkdir dir="${path.build.output}" if="${not(directory::exists(path.build.output))}"/>
+
+    <call target="set-${build.config}-project-configuration" />
+  </target>
+
+  <target name="package">
+    <mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
+
+    <copy todir="${path.build.output}">
+      <fileset>
+        <include name="${path.base}/*.txt" />
+        <exclude name="${path.base}/version.txt" />
+      </fileset>
+    </copy>
+    
+    <zip zipfile="${path.dist}/GitSharp-${build.version}-${build.config}-${build.platform}.zip" ziplevel="9">
+      <fileset basedir="${path.build.output}">
+        <include name="*.*"/>
+      </fileset>
+    </zip>
+  </target>
+
+  <target name="set-debug-project-configuration" >
+    <property name="build.optimize"	value="false" />
+  </target>
+
+  <target name="set-release-project-configuration" >
+    <property name="build.optimize"	value="true" />
+    <property name="build.defines" value="LINQ;TRACE" />
+  </target>
+
+  <target name="compile-dll">
+    <call target="copy-references"/>
+
+    <property name="project.sources.path" value="${path.base}/${project.directory}"/>
+
+    <call target="create-assembly-info"/>
+
+    <fileset id="project.sources" failonempty="true">
+      <include name="${project.sources.path}/**/*.cs" />
+    </fileset>
+
+    <property name="assembly.extension" value="dll" />
+    <property name="assembly.extension" value="exe" if="${assembly.type == 'exe'}" />
+
+    <csc target="${assembly.type}"
+         debug="Full"
+         define="${build.defines}"
+         optimize="${build.optimize}"
+         output="${path.build.output}/${assembly.name}.${assembly.extension}"
+         doc="${path.build.output}/${assembly.name}.xml" >
+      <sources refid="project.sources" />
+      <references refid="project.references" />
+      <resources prefix="${assembly.namespace}.Resources.">
+        <include name="${project.sources.path}/Resources/*.*"/>
+      </resources>
+      <nowarn>
+        <!-- No warning when public members lack XML comments -->
+        <warning number="1591" />
+      </nowarn>
+    </csc>
+
+    <call target="cleanup-assembly-info"/>
+  </target>
+
+  <target name="cleanup-assembly-info">
+    <delete file="${project.sources.path}/SharedAssemblyInfo.cs" />
+    <delete file="${project.sources.path}/VersionAssemblyInfo.cs" />
+  </target>
+
+  <target name="create-assembly-info">
+    <copy todir="${project.sources.path}">
+      <fileset>
+        <include name="${path.base}/SharedAssemblyInfo.cs" />
+      </fileset>
+    </copy>
+
+    <asminfo output="${project.sources.path}/VersionAssemblyInfo.cs" language="CSharp">
+      <imports>
+        <import namespace="System"/>
+        <import namespace="System.Reflection"/>
+        <import namespace="System.Runtime.InteropServices"/>
+      </imports>
+      <attributes>
+        <attribute type="AssemblyVersionAttribute" value="${version}"/>
+        <attribute type="AssemblyProductAttribute" value="GitSharp [${version.revision}]"/>
+      </attributes>
+    </asminfo>
+  </target>
+
+  <target name="copy-references">
+    <foreach item="File" property="reference">
+      <in>
+        <items refid="project.references" />
+      </in>
+      <do>
+        <echo message="reference = ${reference}"/>
+        <copy file="${reference}" todir="${path.build.output}" />
+      </do>
+    </foreach>
+  </target>
+
+</project>
