@@ -97,7 +97,7 @@ namespace GitSharp.Core.Transport
 
             // If the string passes relative paths such as .\dir1 or ..\dir1,
             // get the absolute path for future processing.
-            if (system().getOperatingSystem() == GitSharp.Core.PlatformType.Windows)
+            if (system().getOperatingSystem() == GitSharp.Core.PlatformType.Windows && !s.StartsWith("git") && !s.StartsWith("https"))
             {
                 try
                 {
