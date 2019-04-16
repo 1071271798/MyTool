@@ -63,7 +63,7 @@ public class ClientMain : SingletonBehaviour<ClientMain>
 
             DontDestroyOnLoad(gameObject);
 
-            SceneManager.GetInst().GotoScene(typeof(TextureLoadScene));
+            SceneManager.GetInst().GotoScene(typeof(PartsLoadScene));
         }
         catch (System.Exception ex)
         {
